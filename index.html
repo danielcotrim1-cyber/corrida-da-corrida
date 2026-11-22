@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#1f1017">
+<title>Corrida da Corrida</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: convite de corte rococó, com fofoca de torcida
+   IDEA: um salão rococó de ameixa e papel creme, com placares emoldurados em ouro
+   PICTURE: a coroa de cola quente dourada, com gemas rosadas, sobre a líder da torcida
+   COLOUR and TYPE: ameixa profunda, papel, vinho, rosa e menta, escala de ouro; Almendra Display + Cinzel + Cormorant Garamond + Pinyon Script + Poppins
+   LAYOUT: aviso de fã, salão da Coroa no topo, semana em papel, elenco em rosado, rodapé noite
+   Identidade adaptada do site oficial da temporada (paleta e tipos), mantendo nome, logo e aviso próprios de site de fã. */
+:root{color-scheme:light dark;
+--papel:light-dark(#f4ecdc,#1a0b10);--papel2:light-dark(#e8d2c4,#22111a);--cartao:light-dark(#fffaf0,#2a1520);
+--tinta:light-dark(#2b1c24,#f4ecdc);--tinta2:light-dark(#7a6570,#c9b3bc);
+--ameixa:#1f1017;--ameixa2:#1a0b10;--noite:#120a07;
+--vinho:#a8385f;--vinho-esc:#5b1a30;--rosa:#d6708f;--menta:#cfe9e2;--verde:#143a31;
+--o0:#351801;--o1:#5a2c05;--o2:#7a4509;--o3:#a36414;--o4:#d9982f;--o5:#f2bf5e;--o6:#fdd88a;--o7:#fff0c4;
+--ouro-v:linear-gradient(180deg,var(--o7) 0,var(--o6) 12%,#e3a640 32%,var(--o3) 50%,var(--o2) 62%,#c98a2c 80%,var(--o5) 92%,var(--o3) 100%);
+--ouro-btn:linear-gradient(180deg,var(--o7) 0,var(--o6) 14%,#ecb44e 44%,#d9982f 62%,#e8b04a 82%,var(--o5) 100%);
+--ouro-texto:linear-gradient(180deg,var(--o7) 0,var(--o6) 24%,#e3a640 52%,var(--o3) 72%,var(--o5) 100%);
+--ouro-h:linear-gradient(90deg,transparent 0,var(--o3) 14%,var(--o6) 34%,var(--o7) 42%,#d9982f 54%,var(--o2) 72%,var(--o3) 86%,transparent 100%);
+--aneis:inset 0 0 0 1.5px var(--o0),inset 0 0 0 3px var(--o6),inset 0 0 0 4px var(--o7),inset 0 0 0 5.5px var(--o2);
+--realce:inset 0 1.5px 0 rgba(255,244,200,.85),inset 0 -2px 3px rgba(60,28,2,.5);
+--sombra-ouro:2px 6px 11px -5px rgba(40,16,0,.62),1px 2px 3px rgba(40,16,0,.3);
+--titulo:Cinzel,"Trajan Pro 3",Georgia,serif;--rotulo:Cinzel,"Trajan Pro 3",Georgia,serif;--serif:"Cormorant Garamond",Georgia,serif;--script:"Cormorant Garamond",Georgia,serif;--ui:"Cormorant Garamond",Georgia,serif}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--papel);color:var(--tinta);font:500 18px/1.5 var(--serif);overflow-x:clip}
+.band{padding:clamp(32px,4.5vw,72px) max(5vw,16px)}
+.wrap{max-width:1240px;margin:0 auto}
+h1,h2,h3{font-family:var(--titulo);font-weight:400;line-height:1.05;text-wrap:balance;margin:0}
+h2{font-size:clamp(32px,3.8vw,49px)}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--o5);outline-offset:2px}
+.dourado{background:var(--ouro-texto);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* ornamento: filete de ouro com gema rosada */
+.orn{display:flex;align-items:center;justify-content:center;gap:0;height:28px;margin:0 auto;max-width:420px}
+.orn::before,.orn::after{content:"";flex:1;height:2px;background:var(--ouro-h)}
+.orn i{width:16px;height:16px;transform:rotate(45deg);margin:0 10px;border-radius:3px;background:radial-gradient(circle at 35% 30%,#ffe3ee 0,#f2a6c0 30%,var(--rosa) 55%,var(--vinho) 100%);box-shadow:0 0 0 2px var(--o4),0 0 0 3.5px var(--o1),0 0 12px rgba(214,112,143,.6)}
+.fan{background:var(--noite);color:#f4ecdc;font:400 14px/1.45 var(--ui);padding:10px max(5vw,16px);text-align:center;border-bottom:2px solid transparent;border-image:var(--ouro-h) 1}
+.fan b{color:var(--o6);font-weight:600}
+header{background:var(--ameixa);color:#f4ecdc;position:sticky;top:0;z-index:5;padding:10px max(5vw,16px);box-shadow:0 2px 0 var(--o3),0 6px 18px rgba(0,0,0,.35)}
+header .wrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo svg{width:58px;height:39px;flex:none;filter:drop-shadow(0 2px 2px rgba(0,0,0,.4))}
+.logo span{display:flex;flex-direction:column;line-height:1}
+.lg-do{font-family:var(--script);font-size:24px;color:var(--o6)}
+.lg-main{font-family:var(--titulo);font-size:21px;background:var(--ouro-texto);-webkit-background-clip:text;background-clip:text;color:transparent}
+.leader{display:flex;align-items:center;gap:12px;font:400 14px var(--ui)}
+.btn-ouro,.leader button{font:600 12.5px/1 var(--rotulo);letter-spacing:.08em;text-transform:uppercase;color:var(--o0);background:var(--ouro-btn);border:0;border-radius:999px;padding:0 20px;min-height:44px;box-shadow:var(--aneis),var(--realce),var(--sombra-ouro)}
+.coroa{background:radial-gradient(ellipse at 25% 20%,rgba(168,56,95,.35),transparent 55%),radial-gradient(ellipse at 90% 100%,rgba(20,58,49,.55),transparent 50%),var(--ameixa2);color:#f4ecdc;position:relative;overflow:hidden}
+.coroa .wrap{position:relative;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(20px,4vw,56px);align-items:start}
+.coroa .kicker{font-family:var(--script);font-size:clamp(26px,2.4vw,31px);color:var(--o6)}
+.coroa h2{background:var(--ouro-texto);-webkit-background-clip:text;background-clip:text;color:transparent;font-size:clamp(36px,4.4vw,56px);padding-bottom:4px}
+.coroa p.lead{max-width:44ch;color:#ead9cf}
+.throne{display:grid;justify-items:center;text-align:center;margin-top:22px}
+.throne svg.crown{width:min(260px,70%);height:auto;margin-bottom:-26px;position:relative;z-index:1;filter:drop-shadow(0 8px 6px rgba(0,0,0,.45))}
+.throne .ava{width:clamp(130px,18vw,180px);height:clamp(130px,18vw,180px);font-size:56px;box-shadow:0 0 0 4px var(--o0),0 0 0 9px var(--o5),0 0 0 11px var(--o7),0 0 0 14px var(--o2),0 0 40px rgba(253,216,138,.35)}
+.throne .who{font-family:var(--titulo);font-size:clamp(28px,3.4vw,40px);margin-top:20px;background:var(--ouro-texto);-webkit-background-clip:text;background-clip:text;color:transparent}
+.throne .pct{font:400 15px var(--ui);color:#ead9cf}
+.board{background:var(--cartao);color:var(--tinta);border-radius:20px;padding:clamp(16px,2vw,24px);box-shadow:var(--aneis),0 24px 50px rgba(0,0,0,.45)}
+.board h3,.panel h3{font-size:clamp(24px,2.4vw,30px);color:var(--vinho)}
+.meta{font:400 14px/1.45 var(--ui);color:var(--tinta2);margin:4px 0 14px}
+ol.rank{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.row{display:grid;grid-template-columns:48px minmax(0,1fr) 72px auto;gap:12px;align-items:center;padding:8px 10px;border-radius:14px;background:var(--papel);border:1px solid rgba(184,116,28,.25)}
+.row.top{background:linear-gradient(90deg,rgba(253,216,138,.35),transparent 70%),var(--papel);border-color:var(--o4)}
+.ava{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-family:var(--titulo);font-size:20px;color:#2b1c24;overflow:hidden;flex:none;box-shadow:0 0 0 2px var(--o4),0 0 0 3.5px var(--o1)}
+.ava img{width:100%;height:100%;object-fit:cover}
+.nm{font:600 15px/1.3 var(--ui);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar{height:10px;border-radius:99px;background:rgba(168,56,95,.12);margin-top:7px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(43,28,36,.15)}
+.bar i{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,var(--vinho),var(--rosa));transition:width .7s cubic-bezier(.22,.8,.24,1)}
+.row.top .bar i,.lk.top .bar i{background:var(--ouro-v)}
+.num{text-align:right;font:600 16px var(--ui);font-variant-numeric:tabular-nums;white-space:nowrap}
+.num small{display:block;font-weight:400;font-size:13px;color:var(--tinta2)}
+.vote{position:relative;font:600 12px/1 var(--rotulo);letter-spacing:.08em;text-transform:uppercase;color:#f4ecdc;background:linear-gradient(180deg,#b8436c,var(--vinho) 45%,var(--vinho-esc));border:0;border-radius:999px;padding:0 18px;min-height:44px;box-shadow:inset 0 0 0 1.5px var(--o5),inset 0 1px 0 rgba(255,255,255,.35),0 3px 6px -2px rgba(60,10,25,.5)}
+.vote:hover{background:var(--ouro-btn);color:var(--o0)}
+.vote:disabled{opacity:.45;cursor:not-allowed}
+.vote .plus{position:absolute;left:50%;top:-4px;font:600 15px var(--ui);color:var(--vinho);pointer-events:none;animation:up .8s ease-out forwards}
+@keyframes up{from{opacity:1;transform:translate(-50%,0)}to{opacity:0;transform:translate(-50%,-28px)}}
+.note{font:400 14px var(--ui);margin:10px 0 0;color:var(--tinta2)}
+.note.warn{color:var(--rosa);font-weight:600}
+.coroa .note{color:#f2c3d3}
+.week .head{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:end;justify-content:space-between;margin-bottom:20px}
+.ep{font-family:var(--script);font-size:clamp(26px,2.4vw,31px);color:var(--vinho)}
+.week h2{color:var(--tinta)}
+.clock{background:var(--ameixa);color:#f4ecdc;border-radius:14px;padding:12px 18px;text-align:center;box-shadow:var(--aneis),var(--sombra-ouro)}
+.clock b{display:block;font:600 11px/1 var(--rotulo);letter-spacing:.14em;text-transform:uppercase;color:var(--o6);margin-bottom:6px}
+.clock .t{font-family:var(--titulo);font-size:24px;white-space:nowrap}
+.clock .t em{font-style:normal;color:var(--rosa);margin:0 6px}
+.clock small{display:block;font:400 12px var(--ui);color:#cdb6bf;margin-top:4px}
+.polls{display:grid;gap:24px;margin-top:22px}
+.panel{background:var(--cartao);border-radius:20px;padding:clamp(18px,2.4vw,30px);box-shadow:var(--aneis),0 10px 26px rgba(70,38,12,.12)}
+.pn{font-family:var(--script);font-size:24px;color:var(--o3)}
+.real{background:var(--ameixa);color:#f4ecdc;border-radius:18px;padding:16px 22px;display:flex;flex-wrap:wrap;gap:12px 36px;align-items:center;box-shadow:var(--aneis)}
+.real h3{font-size:22px;background:var(--ouro-texto);-webkit-background-clip:text;background-clip:text;color:transparent}
+.real dl{margin:0;display:flex;flex-wrap:wrap;gap:10px 36px}
+.real dt{font:600 11px var(--rotulo);letter-spacing:.12em;text-transform:uppercase;color:var(--o6)}
+.real dd{margin:2px 0 0;font:600 16px var(--ui)}
+.looks{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:18px}
+.lk{background:var(--papel);border-radius:16px;padding:10px;display:grid;gap:8px;border:1px solid rgba(184,116,28,.25)}
+.lk.top{box-shadow:var(--aneis);border-color:transparent}
+.ph{aspect-ratio:3/4;border-radius:10px;overflow:hidden;display:grid;place-items:center;text-align:center;color:var(--tinta2);font:400 14px var(--ui);background:linear-gradient(180deg,rgba(214,112,143,.12),rgba(168,56,95,.08));box-shadow:inset 0 0 0 1.5px var(--o4),inset 0 0 0 5px var(--papel),inset 0 0 0 6px rgba(184,116,28,.5)}
+.ph img{width:100%;height:100%;object-fit:cover}
+.ph svg{width:46px;height:46px;display:block;margin:0 auto 6px;color:var(--o3)}
+.lk .nm{font-size:15px;white-space:normal}
+.lk .ln{display:flex;justify-content:space-between;gap:8px;align-items:baseline;font:600 15px var(--ui)}
+.lk .ln .meta{font-weight:400}
+.lk .vote{width:100%}
+.cast{background:var(--papel2)}
+.cast h2{color:var(--vinho)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;margin-top:22px}
+.cc{border-radius:18px;padding:18px 14px;display:grid;justify-items:center;text-align:center;gap:6px;background:var(--cartao);box-shadow:var(--aneis),0 8px 20px rgba(70,38,12,.12)}
+.cc .ava{width:88px;height:88px;font-size:32px;box-shadow:0 0 0 3px var(--o1),0 0 0 6px var(--o5),0 0 0 7.5px var(--o2)}
+.cc b{font:600 15px/1.3 var(--ui);margin-top:6px}
+.cc .ig{font:400 14px var(--ui);color:var(--tinta2);text-decoration:none}
+.tag{font:600 10.5px/1 var(--rotulo);letter-spacing:.1em;text-transform:uppercase;border-radius:99px;padding:6px 10px;background:var(--menta);color:var(--verde)}
+.tag.out{background:rgba(168,56,95,.12);color:var(--vinho)}
+footer{background:var(--noite);color:#e8d2c4;font:400 14px/1.55 var(--ui);border-top:2px solid transparent;border-image:var(--ouro-h) 1}
+footer p{max-width:70ch;margin:0 0 8px}
+footer b{font-family:var(--titulo);font-weight:400;font-size:18px;color:var(--o6)}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ameixa);color:#f4ecdc;font:400 14px var(--ui);padding:12px 18px;border-radius:14px;max-width:min(92vw,520px);z-index:9;display:none;box-shadow:var(--aneis)}
+
+/* ===== Texturas e botões gerados no Magnific (Nano Banana 2.1) ===== */
+:root{--tex-papel:url(assets/papel.webp)}
+:root[data-theme=dark]{--tex-papel:none}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--tex-papel:none}}
+body{background-image:var(--tex-papel);background-size:256px}
+.panel,.board,.cc,.lk{background-image:var(--tex-papel);background-size:256px}
+.coroa{background:linear-gradient(180deg,rgba(26,11,16,.55),rgba(26,11,16,.35) 40%,rgba(26,11,16,.7)),radial-gradient(ellipse at 25% 20%,rgba(168,56,95,.4),transparent 55%),radial-gradient(ellipse at 90% 100%,rgba(20,58,49,.55),transparent 50%),url(assets/damasco.webp) 0 0/256px repeat,var(--ameixa2)}
+header{background:linear-gradient(rgba(31,16,23,.82),rgba(31,16,23,.82)),url(assets/damasco.webp) 0 0/200px repeat,var(--ameixa)}
+.real,.clock{background:linear-gradient(rgba(31,16,23,.78),rgba(31,16,23,.78)),url(assets/damasco.webp) 0 0/200px repeat,var(--ameixa)}
+footer{background:linear-gradient(rgba(18,10,7,.88),rgba(18,10,7,.88)),url(assets/damasco.webp) 0 0/220px repeat,var(--noite)}
+.btn-ouro,.leader button{background:none;box-shadow:none;border:solid transparent;border-width:0 30px;border-image:url(assets/btn-ouro.webp) 0 70 fill/0 30px stretch;padding:0 6px;min-height:46px;filter:drop-shadow(0 3px 3px rgba(40,16,0,.45))}
+.vote{background:none;box-shadow:none;border:solid transparent;border-width:0 26px;border-image:url(assets/btn-vinho.webp) 0 70 fill/0 26px stretch;padding:0 4px;min-height:46px;color:#f4ecdc;text-shadow:0 1px 1px rgba(40,0,15,.6);filter:drop-shadow(0 2px 2px rgba(60,10,25,.35))}
+.vote:hover{background:none;border-image-source:url(assets/btn-ouro.webp);color:var(--o0);text-shadow:0 1px 0 rgba(255,240,196,.6)}
+.orn{height:46px;max-width:440px;background:url(assets/ornamento.webp) center/contain no-repeat}
+.orn::before,.orn::after,.orn i{display:none}
+.retrato{position:relative;width:clamp(180px,23vw,240px);aspect-ratio:1;display:grid;place-items:center;margin-top:-6px}
+.retrato::after{content:"";position:absolute;inset:0;background:url(assets/moldura.webp) center/contain no-repeat;pointer-events:none;filter:drop-shadow(0 6px 10px rgba(0,0,0,.45))}
+.throne .retrato .ava{width:64%;height:64%;margin-top:6%;box-shadow:none;font-size:clamp(40px,5vw,56px)}
+.throne svg.crown{margin-bottom:-14px;z-index:2}
+@media(max-width:600px){.throne svg.crown{width:170px}.retrato{width:190px}}
+@media(max-width:900px){.coroa .wrap{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:600px){body{font-size:17px}.leader .lt{display:none}.row{grid-template-columns:44px minmax(0,1fr) auto;row-gap:8px}.row .ava{width:44px;height:44px}.row .num{grid-column:3}.row .vote{grid-column:1/-1}.lg-main{font-size:17px}.looks{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.clock .t{font-size:21px}}
+@media(prefers-reduced-motion:reduce){.bar i{transition:none}.vote .plus{animation:none;display:none}}
+
+/* ===== Versão 2 (Figma "VERSAO 2"): fundo rococó, logo, retrato emoldurado, bordas douradas com brilho ===== */
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+body{background:linear-gradient(rgba(40,22,31,.82),rgba(40,22,31,.82)),url(assets/damasco.webp) 0 0/256px,#2c1a22;color:var(--tinta)}
+.capa{background:#2c1a22 url(assets/bg-rococo.webp) center top/cover no-repeat}
+header.topo{position:relative;background:none;box-shadow:none;padding:18px max(5vw,16px) 0}
+header.topo .wrap{align-items:flex-start}
+.logo-img img{display:block;width:clamp(120px,14vw,200px);height:auto;filter:drop-shadow(0 6px 10px rgba(0,0,0,.45))}
+header.topo .leader{padding-top:14px;color:#ead9cf}
+.btn-ouro,.leader button{min-height:58px;font-size:15px;border-width:0 36px;border-image-width:0 36px;padding:0 10px}
+.coroa{background:none;padding-top:clamp(12px,2vw,28px)}
+.coroa .wrap{grid-template-columns:minmax(0,5fr) minmax(0,7fr);align-items:center}
+.trono2{display:grid;justify-items:center}
+.retrato-q{margin:0;width:min(100%,460px)}
+.retrato-q img{display:block;width:100%;height:auto;filter:drop-shadow(0 18px 30px rgba(0,0,0,.5))}
+.retrato-q.vazio{padding:12% 6% 0}
+.quadro{aspect-ratio:3/4;display:grid;place-items:center;background:radial-gradient(ellipse at 50% 40%,rgba(214,112,143,.25),transparent 60%),linear-gradient(rgba(107,21,48,.55),rgba(107,21,48,.55)),url(assets/damasco.webp) 0 0/200px;box-shadow:0 0 0 3px var(--o1),0 0 0 9px #e8b04a,0 0 0 11px var(--o7),0 0 0 13px var(--o2),0 18px 30px rgba(0,0,0,.5)}
+.quadro span{font:700 clamp(64px,9vw,120px)/1 var(--serif);color:var(--o6);text-shadow:0 2px 6px rgba(0,0,0,.5)}
+.placa{text-align:center;margin-top:14px;display:grid;gap:2px}
+.placa b{font:400 clamp(26px,3vw,36px)/1.1 var(--titulo);background:var(--ouro-texto);-webkit-background-clip:text;background-clip:text;color:transparent}
+.placa span{font:400 14px var(--ui);color:#ead9cf}
+.board,.panel{border-radius:0;color:var(--tinta);background:radial-gradient(ellipse at 50% 45%,rgba(255,246,248,.82),rgba(255,246,248,.15) 62%,rgba(255,246,248,0) 80%),url(assets/rosa.webp) 0 0/256px,#e2b2be;box-shadow:0 0 0 4px #fad376,0 0 14px 6px rgba(250,211,118,.6),0 24px 50px rgba(0,0,0,.45)}
+.board h3,.panel h3{font-family:var(--serif);font-weight:600;color:var(--tinta)}
+.panel .pn{color:var(--vinho)}
+.meta{color:#6e5262}
+.row{border-radius:29px;background:#f4ecdc;border:1px solid rgba(184,116,28,.3);padding:8px 10px 8px 8px}
+.row.top{background:linear-gradient(90deg,rgba(253,216,138,.45),#f4ecdc 70%)}
+.ava.ic{background:none;box-shadow:none;overflow:visible;position:relative}
+.ava.ic img{position:absolute;left:-1px;top:-10px;width:104%;height:auto;object-fit:contain;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
+.cc .ava.ic{box-shadow:none}
+.cc.fora .ava img{-webkit-filter:grayscale(1);filter:grayscale(1)}.cc.fora .ava:not(.ic){-webkit-filter:grayscale(1);filter:grayscale(1)}
+.week h2{color:#f4ecdc}.week .ep{color:var(--rosa)}.week .head .meta{color:#cdb6bf}
+.real,.clock{border-radius:0;box-shadow:0 0 0 3px #fad376,0 0 12px 4px rgba(250,211,118,.5)}
+.cast{background:none}.cast h2{color:var(--o6)}.cast>.wrap>.meta{color:#cdb6bf}
+.cc{border-radius:0;background:#f4ecdc;box-shadow:0 0 0 3px #fad376,0 0 10px 3px rgba(250,211,118,.45)}
+.lk{border-radius:0;background:#f4ecdc}.lk.top{box-shadow:0 0 0 3px #fad376,0 0 10px 3px rgba(250,211,118,.5)}
+.orn{filter:drop-shadow(0 2px 3px rgba(0,0,0,.4))}
+@media(max-width:900px){.coroa .wrap{grid-template-columns:minmax(0,1fr)}.retrato-q{width:min(80%,380px)}}
+@media(max-width:600px){.row{grid-template-columns:44px minmax(0,1fr) auto;row-gap:2px}.row .ava{grid-row:span 2}.row .num{grid-column:2;grid-row:2;text-align:left;font-size:13px}.row .num small{display:inline;margin-left:6px}.row .vote{grid-column:3;grid-row:1/span 2;font-size:11px;border-width:0 22px;border-image-width:0 22px;padding:0}header.topo .wrap{align-items:center}header.topo .leader{padding-top:0}.btn-ouro,.leader button{min-height:48px;font-size:12px;border-width:0 30px;border-image-width:0 30px}}
+
+/* ===== Tipografia v3: 2 famílias — Cinzel (primária: títulos, rótulos, números) + Cormorant Garamond (secundária: texto) ===== */
+body{font-variant-numeric:lining-nums}
+h1,h2,h3{font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+h2{font-size:clamp(26px,3vw,38px)}
+.coroa h2{font-size:clamp(30px,3.6vw,44px)}
+.board h3,.panel h3{font-family:var(--titulo);font-weight:600;font-size:clamp(18px,1.9vw,23px);letter-spacing:.08em;color:var(--tinta)}
+.real h3{font-size:17px;letter-spacing:.1em}
+.coroa .kicker,.ep,.pn,.lg-do{font-style:italic;font-weight:600;letter-spacing:0}
+.coroa .kicker,.ep{font-size:clamp(20px,1.9vw,24px)}
+.pn{font-size:19px}
+.fan,.leader,.meta,.note,.ph,.cc .ig,.toast,.throne .pct,.placa span,.clock small{font-size:16px}
+.fan{font-size:15.5px}
+footer{font-size:16px}
+footer b{font-size:16px;letter-spacing:.06em}
+.meta{font-style:italic}
+.nm,.cc b{font-family:var(--serif);font-weight:700;font-size:18px}
+.real dd{font-family:var(--serif);font-weight:700;font-size:19px}
+.num{font-family:var(--titulo);font-weight:600;font-size:16px;font-variant-numeric:lining-nums tabular-nums}
+.num small{font-family:var(--serif);font-style:italic;font-size:14px}
+.lk .ln{font-family:var(--titulo);font-weight:600;font-size:15px}
+.lk .ln .meta{font-family:var(--serif)}
+.clock .t{font-size:21px;letter-spacing:.04em}
+.throne .who,.placa b{letter-spacing:.06em;text-transform:uppercase}
+.vote .plus{font-family:var(--titulo)}
+.ava{font-family:var(--titulo);font-weight:600;letter-spacing:.02em}
+.quadro span{font-family:var(--titulo)}
+.provas{margin:6px 0 18px}
+.provas h4{font:600 13px/1 var(--rotulo);letter-spacing:.14em;text-transform:uppercase;color:var(--vinho);margin:4px 0 12px;display:flex;align-items:center;gap:12px}
+.provas h4::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(184,116,28,.55),transparent)}
+.provas h4:last-child{margin:22px 0 0}
+.lk.pv{align-content:start}
+.lk.pv .tag{justify-self:start}
+.row .info{min-width:0;display:flex;flex-direction:column;gap:6px}
+.row .nm{display:block;color:#2b1c24;-webkit-text-fill-color:#2b1c24;opacity:1;visibility:visible;min-height:1.3em;line-height:1.3;font-family:"Cormorant Garamond",Georgia,"Times New Roman",serif}
+.row .num,.row .num small{color:#2b1c24;-webkit-text-fill-color:currentColor}.row .num small{color:#7a6570}
+@media(max-width:600px){.row{grid-template-columns:44px minmax(0,1fr) auto;grid-template-areas:"ava info vote" "ava num vote"}.row .ava{grid-area:ava}.row .info{grid-area:info}.row .num{grid-area:num}.row .vote{grid-area:vote}}
+.resumo{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin:18px 0 22px}
+.resumo[hidden]{display:none}
+.resumo article{background:#f4ecdc;padding:18px 22px;box-shadow:0 0 0 3px #fad376,0 0 10px 3px rgba(250,211,118,.45)}
+.resumo h4{font:600 13px/1 var(--rotulo);letter-spacing:.14em;text-transform:uppercase;color:var(--vinho);margin:0 0 10px}
+.resumo p{margin:0;font:500 17px/1.5 var(--serif);color:#2b1c24}
+.provas .txt{margin:0 0 18px;padding:14px 18px;background:#f4ecdc;border-left:3px solid #d9982f;font:500 17px/1.5 var(--serif);color:#2b1c24}
+.cc{align-content:start}.cc .tag{align-self:start}.cc .estatua{width:118px;height:auto;margin:-6px 0 2px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.35))}
+.lk.fone{background:none!important;box-shadow:none!important;border:0!important;padding:0;justify-items:center;text-align:center}
+.lk.fone .ph{aspect-ratio:auto;background:none;box-shadow:none;border:0;border-radius:0;overflow:visible}
+.lk.fone .ph img{width:100%;height:auto;object-fit:contain;filter:drop-shadow(0 14px 22px rgba(43,12,24,.45))}
+.lk.fone .nm{font-size:18px}.lk.fone .tag{justify-self:center}
+
+header.topo .logo-wrap{display:flex;align-items:center;gap:14px}
+.carta-btn{display:grid;justify-items:center;gap:2px;background:none;border:0;padding:4px;cursor:pointer;color:#fdd88a;font:600 10.5px/1 var(--rotulo);letter-spacing:.14em;text-transform:uppercase;animation:cartaPulse 3.2s ease-in-out infinite}
+.carta-btn svg{width:64px;height:48px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.45))}
+.carta-btn:hover svg,.carta-btn:focus-visible svg{transform:rotate(-6deg) scale(1.06);transition:transform .25s}
+@keyframes cartaPulse{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@media (prefers-reduced-motion:reduce){.carta-btn{animation:none}}
+.carta{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:20px;background:rgba(20,8,14,.72);backdrop-filter:blur(3px)}
+.carta[hidden]{display:none}
+.carta-papel{position:relative;max-width:560px;width:100%;max-height:88vh;overflow:auto;padding:44px 40px 34px;color:#3a2317;background:#efe0c0 url(assets/papel.webp) center/cover;box-shadow:0 0 0 3px #fad376,0 0 0 9px rgba(43,12,24,.6),0 0 0 11px #d9982f,0 30px 70px rgba(0,0,0,.6);border-radius:2px;animation:cartaAbre .5s cubic-bezier(.2,.8,.2,1.1)}
+@keyframes cartaAbre{from{opacity:0;transform:translateY(24px) scaleY(.6) rotate(-2deg)}to{opacity:1;transform:none}}
+.carta-kick{margin:0 0 6px;font:italic 600 18px var(--serif);color:#a8385f;text-align:center}
+.carta h2{font:700 22px/1.25 var(--titulo);letter-spacing:.06em;text-transform:uppercase;text-align:center;color:#3a1220;margin:0 0 18px}
+.carta p,.carta li{font:500 17.5px/1.5 var(--serif)}
+.carta p{margin:0 0 12px}
+.carta ul{margin:6px 0 14px;padding-left:20px}.carta li{margin:0 0 8px}.carta li::marker{content:"❦  ";color:#a8385f}
+.carta b{color:#5e1430}
+.carta-obs{font-style:italic;color:#6e5262;font-size:15.5px!important}
+.carta-ass{text-align:right;margin-top:16px!important}.carta-ass span{font:italic 700 20px var(--serif);color:#a8385f}
+.carta-ok{display:block;margin:18px auto 0}
+.carta-x{position:absolute;top:10px;right:14px;background:none;border:0;font:400 30px/1 var(--serif);color:#5e1430;cursor:pointer}
+@media(max-width:600px){.carta-papel{padding:38px 22px 28px}.carta h2{font-size:18px}.carta-btn svg{width:50px;height:38px}.carta-btn span{font-size:9px}}
+</style>
+
+</head>
+<body>
+<div class="fan" role="note"><b>Site de fã.</b> Feito por fã, sem ligação com a DiaTV, o Diva Depressão ou a produção da Corrida das Blogueiras. Os votos daqui são só da torcida e não valem no programa. Assista aos episódios no YouTube da DiaTV.</div>
+
+<div class="capa">
+<header class="topo">
+  <div class="wrap">
+    <div class="logo-wrap"><a class="logo-img" href="#coroa"><img src="assets/logo.webp" alt="Corrida da Corrida das Blogueiras" width="440" height="426"></a>
+    <button type="button" class="carta-btn" id="abrirCarta" aria-haspopup="dialog" aria-controls="carta" title="Você recebeu um convite">
+      <svg viewBox="0 0 96 72" aria-hidden="true"><defs><linearGradient id="gEnv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbf3e2"/><stop offset="1" stop-color="#e9d6b4"/></linearGradient><linearGradient id="gOuro" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0c4"/><stop offset=".45" stop-color="#e3a640"/><stop offset=".75" stop-color="#a36414"/><stop offset="1" stop-color="#f2bf5e"/></linearGradient><radialGradient id="gLacre" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#d6708f"/><stop offset=".55" stop-color="#a8385f"/><stop offset="1" stop-color="#5e1430"/></radialGradient></defs>
+      <rect x="6" y="10" width="84" height="56" rx="4" fill="url(#gEnv)" stroke="url(#gOuro)" stroke-width="3"/>
+      <path d="M8 13 L48 42 L88 13" fill="none" stroke="url(#gOuro)" stroke-width="2.5"/>
+      <path d="M8 63 L38 38 M88 63 L58 38" stroke="#d9b980" stroke-width="1.5" fill="none"/>
+      <path d="M2 8 q6 -6 12 0 M82 8 q6 -6 12 0 M2 68 q6 6 12 0 M82 68 q6 6 12 0" stroke="url(#gOuro)" stroke-width="2.5" fill="none"/>
+      <circle cx="48" cy="42" r="11" fill="url(#gLacre)"/><circle cx="48" cy="42" r="7.5" fill="none" stroke="#f3b7c9" stroke-opacity=".6" stroke-width="1"/>
+      <text x="48" y="46.5" text-anchor="middle" font-family="Cinzel,serif" font-weight="700" font-size="11" fill="#fbe3ea">C</text></svg>
+      <span>Seu convite</span></button></div>
+    <div class="leader"><span class="lt" id="leaderTxt">Coroa: carregando a torcida…</span><button type="button" id="goCoroa">Votar na winner</button></div>
+  </div>
+</header>
+<div class="carta" id="carta" role="dialog" aria-modal="true" aria-labelledby="cartaT" hidden>
+  <div class="carta-papel">
+    <button type="button" class="carta-x" id="fecharCarta" aria-label="Fechar">×</button>
+    <p class="carta-kick">Convite real · Ano 8</p>
+    <h2 id="cartaT">Você foi selecionada para ser jurada da Corrida das Blogueiras</h2>
+    <p>Cara blogueira, cara torcedora,</p>
+    <p>A partir de hoje, a bancada também é sua. Neste salão quem decide é o público, e o seu voto tem lugar reservado ao lado de Edu, Fih e Lorelay.</p>
+    <ul>
+      <li><b>Coroe a sua winner.</b> No topo do salão você escolhe quem merece a Coroa de Cola Quente. O ranking da torcida muda ao vivo.</li>
+      <li><b>Julgue cada prova.</b> Toda semana você diz quem merecia ganhar, quem deveria ter ido pro Flop, quem merece sair e qual foi o melhor look.</li>
+      <li><b>Vote quantas vezes quiser.</b> Não tem login nem limite. Torcida que é torcida vota de novo.</li>
+      <li><b>Fique de olho no relógio.</b> A votação abre e fecha às terças, às 20h, junto com o episódio novo.</li>
+    </ul>
+    <p class="carta-obs">Este é um salão de fãs: os votos daqui medem a torcida e não valem no programa.</p>
+    <p class="carta-ass">Com cola quente e carinho,<br><span>a Corrida da Corrida</span></p>
+    <button type="button" class="btn-ouro carta-ok" id="okCarta">Aceito o cargo</button>
+  </div>
+</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0c4"/><stop offset=".18" stop-color="#fdd88a"/><stop offset=".45" stop-color="#e3a640"/><stop offset=".7" stop-color="#a36414"/><stop offset="1" stop-color="#f2bf5e"/></linearGradient><radialGradient id="gem" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffe3ee"/><stop offset=".35" stop-color="#f2a6c0"/><stop offset=".65" stop-color="#d6708f"/><stop offset="1" stop-color="#a8385f"/></radialGradient>
+    <symbol id="crown" viewBox="0 0 120 80">
+      <path d="M10 54 L18 18 L38 40 L60 6 L82 40 L102 18 L110 54 Z" fill="url(#gold)" stroke="#5a2c05" stroke-width="2" stroke-linejoin="round"/>
+      <rect x="8" y="50" width="104" height="14" rx="5" fill="url(#gold)" stroke="#5a2c05" stroke-width="2"/>
+      <g fill="#fff" fill-opacity=".9" stroke="#e8d2c4" stroke-width="1">
+        <circle cx="18" cy="16" r="6"/><circle cx="60" cy="5" r="7"/><circle cx="102" cy="16" r="6"/>
+        <path d="M22 63 q2 9 0 12 a3.5 3.5 0 1 0 5 0 q-2-4 0-12Z"/>
+        <path d="M50 63 q2 13 0 16 a3.5 3.5 0 1 0 5 0 q-2-5 0-16Z"/>
+        <path d="M78 63 q2 7 0 9 a3.5 3.5 0 1 0 5 0 q-2-3 0-9Z"/>
+        <path d="M96 63 q2 11 0 13 a3.5 3.5 0 1 0 5 0 q-2-4 0-13Z"/>
+      </g>
+      <g fill="url(#gem)" stroke="#7a4509" stroke-width=".8"><circle cx="34" cy="57" r="3.6"/><circle cx="60" cy="57" r="4.4"/><circle cx="86" cy="57" r="3.6"/></g>
+      <path d="M26 44 Q60 30 94 44" stroke="#fff" stroke-opacity=".55" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<main>
+<section class="coroa band" id="coroa" aria-labelledby="coroaT">
+  <div class="wrap">
+    <div class="trono2">
+      <h2 id="coroaT" class="sr">Quem leva a Coroa de Cola Quente?</h2>
+      <div id="throne"></div>
+    </div>
+    <div class="board">
+      <h3>Ranking da torcida</h3>
+      <p class="meta" id="coroaMeta">Carregando votos…</p>
+      <ol class="rank" id="coroaList"></ol>
+      <p class="note" id="coroaNote" hidden></p>
+    </div>
+  </div>
+</section>
+</div>
+
+<div class="orn" aria-hidden="true" style="margin-top:-14px;position:relative;z-index:1"><i></i></div>
+<section class="week band" id="semana" aria-labelledby="weekT">
+  <div class="wrap">
+    <div class="head">
+      <div><div class="ep" id="weekEp"></div><h2 id="weekT"></h2><p class="meta" id="weekSub" style="margin-top:8px"></p></div>
+      <div class="clock" id="clock"></div>
+    </div>
+    <aside class="real" id="real"></aside>
+    <p class="note" id="weekNote" hidden></p>
+    <div class="polls" id="polls"></div>
+  </div>
+</section>
+
+<section class="cast band" id="elenco" aria-labelledby="castT">
+  <div class="wrap">
+    <div class="orn" aria-hidden="true" style="margin:0 0 14px;max-width:260px"><i></i></div>
+    <h2 id="castT">O elenco da temporada 8</h2>
+    <p class="meta" style="margin-top:8px">12 participantes, 11 episódios e final ao vivo. Episódios inéditos toda terça, às 20h.</p>
+    <div class="grid" id="castGrid"></div>
+  </div>
+</section>
+</main>
+
+<footer class="band">
+  <div class="wrap">
+    <p><b>Corrida da Corrida das Blogueiras</b> é um projeto de fã. Nomes, marcas e imagens do programa pertencem aos seus donos.</p>
+    <p>Votação livre e sem login: serve pra medir a torcida, não é pesquisa nem resultado oficial.</p>
+  </div>
+</footer>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+{
+/* ===== Dados editáveis ===== */
+const CAST=[
+ {id:"aysha",name:"Aysha Pink",ig:"apinkoficial",st:"in"},
+ {id:"barbara",name:"Bárbara Freitas",ig:"satierfab",st:"in"},
+ {id:"breia",name:"Breia",ig:"breiaferr",st:"in"},
+ {id:"gabriel",name:"Gabriel Queiroz",ig:"ga_queiroz",st:"in"},
+ {id:"jheny",name:"Jheny Albano",ig:"jhenyalbano",st:"in"},
+ {id:"latyffa",name:"Latyffa Romayale",ig:"a.latyffaa",st:"in"},
+ {id:"matthel",name:"Matthel",ig:"omatthel",st:"in"},
+ {id:"peter",name:"Peter Poc",ig:"peterpoc",st:"out",note:"Eliminado no ep. 2"},
+ {id:"rhanyane",name:"Rhanyane",ig:"rhanyane",st:"out",note:"Eliminada no ep. 4"},
+ {id:"paizinho",name:"Paizinho dos Looks",ig:"paizinhodoslooks",st:"out",note:"Desistiu no ep. 2"},
+ {id:"sttefone",name:"Sttefone",ig:"sttefone",st:"in"},
+ {id:"talitah",name:"Talitah Sampaio Girls",ig:"sampaiogirls",st:"in"}
+];
+const PEDRA={paizinho:"assets/paizinho-pedra.webp",peter:"assets/peter-pedra.webp",rhanyane:"assets/rhanyane-pedra.webp"}; /* eliminadas petrificadas no elenco */
+const PHOTOS={ /* retrato: capa (com moldura já aplicada) · icone: avatar redondo do ranking */
+ aysha:{retrato:"assets/aysha-retrato.webp?v=2",icone:"assets/aysha-icone.webp?v=2"},
+ barbara:{retrato:"assets/barbara-retrato.webp",icone:"assets/barbara-icone.webp"},
+ breia:{retrato:"assets/breia-retrato.webp",icone:"assets/breia-icone.webp"},
+ gabriel:{retrato:"assets/gabriel-retrato.webp",icone:"assets/gabriel-icone.webp"},
+ jheny:{retrato:"assets/jheny-retrato.webp",icone:"assets/jheny-icone.webp"},
+ latyffa:{retrato:"assets/latyffa-retrato.webp",icone:"assets/latyffa-icone.webp"},
+ matthel:{retrato:"assets/matthel-retrato.webp",icone:"assets/matthel-icone.webp"},
+ peter:{retrato:"assets/peter-retrato.webp",icone:"assets/peter-icone.webp"},
+ rhanyane:{retrato:"assets/rhanyane-retrato.webp",icone:"assets/rhanyane-icone.webp"},
+ paizinho:{retrato:"assets/paizinho-retrato.webp",icone:"assets/paizinho-icone.webp"},
+ sttefone:{retrato:"assets/sttefone-retrato.webp?v=2",icone:"assets/sttefone-icone.webp?v=2"},
+ talitah:{retrato:"assets/talitah-retrato.webp",icone:"assets/talitah-icone.webp"}
+};
+const WEEKS=[
+ {id:"s4",ep:4,title:"Night of Cola Quente",sub:"Baile de máscaras da realeza: figurino e máscara completos, feitos à mão.",
+  opens:"2026-11-17T21:00:00-03:00",closes:"2026-11-24T20:00:00-03:00",
+  cast:["aysha","barbara","breia","gabriel","jheny","latyffa","matthel","rhanyane","sttefone","talitah"],
+  real:{prova:"talitah",elim:"rhanyane"},
+  resumo:{prova:"Night of Cola Quente com tema Baile de Máscaras da realeza: cada participante criou um look completo e uma máscara feitos à mão, principalmente com cola quente, com referência ao sabor de Smirnoff Ice de cada um. Gabriel, que tinha vantagem da prova anterior, escolheu Talitah e Jheny para trabalharem ligadas uma à outra durante uma hora. Mesmo assim, Talitah venceu, sua segunda vitória na temporada, com Bárbara e Latyffa entre os destaques. Matthel não terminou a calça e o blazer, Aysha foi criticada pelo acabamento técnico e o acabamento de Breia também foi questionado. Walério Araújo foi jurado convidado, e Mady e Kitty voltaram para orientar o elenco.",flop:"Matthel e Aysha Pink foram direto para a Prova do Flop; Breia foi a terceira, escolhida pelas três mais bem avaliadas da noite. A prova do Flop e a eliminação vão ao ar no próximo episódio, na terça às 20h. No começo do episódio, saiu o resultado do Flop da semana anterior: Rhanyane foi eliminada."},
+  provas:{aysha:"assets/provas/s4-aysha.webp",barbara:"assets/provas/s4-barbara.webp",breia:"assets/provas/s4-breia.webp",gabriel:"assets/provas/s4-gabriel.webp",jheny:"assets/provas/s4-jheny.webp",latyffa:"assets/provas/s4-latyffa.webp",matthel:"assets/provas/s4-matthel.webp",sttefone:"assets/provas/s4-sttefone.webp",talitah:"assets/provas/s4-talitah.webp"}, /* foto do resultado da prova */
+  flops:{aysha:"assets/flop/s4-aysha.webp",breia:"assets/flop/s4-breia.webp",matthel:"assets/flop/s4-matthel.webp"}, /* quem foi pro Flop: foto da prova do Flop */
+  looks:{aysha:"assets/looks/s4-aysha.webp",barbara:"assets/looks/s4-barbara.webp",breia:"assets/looks/s4-breia.webp",gabriel:"assets/looks/s4-gabriel.webp",jheny:"assets/looks/s4-jheny.webp",latyffa:"assets/looks/s4-latyffa.webp",matthel:"assets/looks/s4-matthel.webp",sttefone:"assets/looks/s4-sttefone.webp",talitah:"assets/looks/s4-talitah.webp"} /* foto do look da semana */}
+];
+const POLLS=[
+ {k:"prova",tab:"Venceu a prova",q:"Quem merecia ganhar a prova?"},
+ {k:"flop",tab:"Ia pro Flop",q:"Quem deveria ter ido pro Flop?"},
+ {k:"elim",tab:"Eliminação",q:"Quem merece sair?"},
+ {k:"look",tab:"Melhor look",q:"Qual foi o melhor look da semana?"}
+];
+const FINAL=+new Date("2027-01-13T20:00:00-03:00");
+/* Firebase (só para a versão do GitHub Pages). Cole aqui a config do seu projeto. */
+const FIREBASE_CONFIG={apiKey:"",authDomain:"",databaseURL:"",projectId:"",appId:""};
+/* ===== Estado ===== */
+const COLORS=["#ffd1e1","#bff0de","#ffe7a8","#d9cffc","#ffc9b5","#c9ecff"];
+const byId=Object.fromEntries(CAST.map((c,i)=>[c.id,{...c,color:COLORS[i%COLORS.length]}]));
+const counts={coroa:{},prova:{},flop:{},elim:{},look:{}};
+let db=null,canVote=true,ready={coroa:false,week:false};
+const $=s=>document.querySelector(s);
+const now=()=>Date.now();
+const openWeek=()=>WEEKS.find(w=>now()>=+new Date(w.opens)&&now()<+new Date(w.closes));
+const shownWeek=()=>openWeek()||[...WEEKS].filter(w=>now()>=+new Date(w.opens)).pop()||WEEKS[0];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const initials=n=>n.split(/\s+/).slice(0,2).map(w=>w[0]).join("").toUpperCase();
+const ava=(id,cls="")=>{const c=byId[id],p=PHOTOS[id];return p&&p.icone?`<div class="ava ic ${cls}"><img src="${p.icone}" alt=""></div>`:`<div class="ava ${cls}" style="background:${c.color}">${initials(c.name)}</div>`};
+const fmt=n=>n.toLocaleString("pt-BR");
+function ranked(poll,ids){const c=counts[poll],tot=ids.reduce((s,i)=>s+(c[i]||0),0);
+ return {tot,list:ids.map(i=>({id:i,n:c[i]||0})).sort((a,b)=>b.n-a.n||byId[a.id].name.localeCompare(byId[b.id].name))}}
+function rows(poll,ids,open){const {tot,list}=ranked(poll,ids);
+ return list.map((r,i)=>{const p=tot?Math.round(r.n*100/tot):0,c=byId[r.id];
+  return `<li class="row${i===0&&r.n?" top":""}">${ava(r.id)}<div class="info"><div class="nm">${esc(c.name)}</div><div class="bar"><i style="width:${p}%"></i></div></div><div class="num">${p}%<small>${fmt(r.n)} voto${r.n===1?"":"s"}</small></div><button type="button" class="vote" data-poll="${poll}" data-id="${r.id}" ${open&&canVote&&db?"":"disabled"} aria-label="Votar em ${esc(c.name)}">Votar</button></li>`}).join("")}
+const alive=()=>CAST.filter(c=>c.st==="in").map(c=>c.id);
+function renderCoroa(){const ids=alive(),open=now()<FINAL,{tot,list}=ranked("coroa",ids);
+ $("#coroaList").innerHTML=rows("coroa",ids,open);
+ $("#coroaMeta").textContent=ready.coroa?`${fmt(tot)} votos até agora · ${ids.length} na disputa`:(db?"Carregando votos…":"Placar indisponível neste link");
+ const lead=list[0],temVoto=lead&&lead.n,destaque=temVoto?lead.id:(ids.find(i=>PHOTOS[i]&&PHOTOS[i].retrato)||null);
+ const quadro=id=>PHOTOS[id]&&PHOTOS[id].retrato?`<figure class="retrato-q"><img src="${PHOTOS[id].retrato}" alt="${esc(byId[id].name)}"></figure>`
+  :`<figure class="retrato-q vazio"><div class="quadro"><span>${id?initials(byId[id].name):"?"}</span></div></figure>`;
+ $("#throne").innerHTML=quadro(destaque)+`<div class="placa"><b>${destaque?esc(byId[destaque].name):"A coroa está vaga"}</b><span>${temVoto?`lidera a torcida com ${Math.round(lead.n*100/tot)}% dos votos`:(destaque?"ainda sem votos · vote e coloque sua favorita aqui":"o primeiro voto decide quem senta aqui")}</span></div>`;
+ $("#leaderTxt").textContent=lead&&lead.n?`Coroa: ${byId[lead.id].name} lidera`:"Coroa: ninguém lidera ainda";}
+const HANGER=`<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14a4 4 0 1 1 6 3.5c-1.3.8-2 1.8-2 3.5v1L6 34h36L24 22"/></svg>`;
+function lookCards(w,open){const {tot,list}=ranked("look",w.cast),L=w.looks||{};
+ return list.map((r,i)=>{const p=tot?Math.round(r.n*100/tot):0,c=byId[r.id];
+  return `<li class="lk${i===0&&r.n?" top":""}"><div class="ph">${L[r.id]?`<img src="${L[r.id]}" alt="Look de ${esc(c.name)}">`:`<div>${HANGER}Foto do look</div>`}</div><div class="nm">${esc(c.name)}</div><div class="bar"><i style="width:${p}%"></i></div><div class="ln"><b>${p}%</b><span class="meta" style="margin:0">${fmt(r.n)} voto${r.n===1?"":"s"}</span></div><button type="button" class="vote" data-poll="look" data-id="${r.id}" ${open&&canVote&&db?"":"disabled"} aria-label="Votar no look de ${esc(c.name)}">Votar</button></li>`}).join("")}
+const CAMERA=`<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16h8l3-5h14l3 5h8v22H6z"/><circle cx="24" cy="26" r="7"/></svg>`;
+function provaCards(w,flop){const P=(flop?w.flops:w.provas)||{},r=w.real||{};
+ return (flop?w.cast.filter(id=>P[id]):w.cast).map(id=>{const c=byId[id],tag=flop?`<span class="tag out">No Flop</span>`:r.prova===id?`<span class="tag">Venceu a prova</span>`:r.elim===id?`<span class="tag out">Eliminada</span>`:"";
+  return `<li class="lk pv${flop?" fone":""}${!flop&&r.prova===id?" top":""}"><div class="ph">${P[id]?`<img src="${P[id]}" alt="${flop?"Prova do Flop":"Resultado da prova"} de ${esc(c.name)}" loading="lazy">`:`<div>${CAMERA}Foto da prova</div>`}</div><div class="nm">${esc(c.name)}</div>${tag}</li>`}).join("")}
+function renderWeek(){const w=shownWeek(),open=!!openWeek()&&openWeek().id===w.id;
+ $("#weekEp").textContent=`Semana do episódio ${w.ep}`;$("#weekT").textContent=w.title;$("#weekSub").textContent=w.sub;
+ $("#polls").innerHTML=POLLS.map((p,i)=>{const ids=p.k==="elim"&&w.flops&&Object.keys(w.flops).length?Object.keys(w.flops):w.cast,{tot}=ranked(p.k,ids);
+  const meta=ready.week?`${fmt(tot)} votos nesta pergunta`:(db?"Carregando votos…":"Placar indisponível neste link");
+  return `<article class="panel" id="p-${p.k}" aria-labelledby="q-${p.k}"><div class="pn">${i+1} de ${POLLS.length}</div><h3 id="q-${p.k}">${p.q}</h3><p class="meta">${meta}</p>${p.k==="prova"||p.k==="flop"?`<div class="provas">${p.k==="prova"&&w.resumo&&w.resumo.prova?`<p class="txt">${esc(w.resumo.prova)}</p>`:""}<h4>Resultados da prova</h4><ol class="looks">${provaCards(w)}</ol><h4>Agora vote</h4></div>`:""}${p.k==="elim"?`<div class="provas">${w.resumo&&w.resumo.flop?`<p class="txt">${esc(w.resumo.flop)}</p>`:""}${w.flops&&Object.keys(w.flops).length?`<h4>Prova do Flop</h4><ol class="looks">${provaCards(w,1)}</ol>`:""}<h4>Agora vote</h4></div>`:""}${p.k==="look"?`<ol class="looks">${lookCards(w,open)}</ol>`:`<ol class="rank">${rows(p.k,ids,open)}</ol>`}</article>`}).join("");
+ const r=w.real||{},item=(lbl,id)=>`<div><dt>${lbl}</dt><dd>${id?esc(byId[id].name):"a confirmar"}</dd></div>`;
+ $("#real").innerHTML=`<h3>E no programa?</h3><dl>${item("Venceu a prova",r.prova)}${item("Foi eliminada",r.elim)}${r.flop?item("Foi pro Flop",r.flop):""}</dl>`;
+ tick();}
+function tick(){const w=openWeek();
+ if(w){const ms=+new Date(w.closes)-now(),d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.floor(ms%36e5/6e4);
+  $("#clock").innerHTML=`<b>Votação aberta</b><span class="t">${d}d<em>❦</em>${h}h<em>❦</em>${m}min</span><small>fecha terça, às 20h</small>`}
+ else $("#clock").innerHTML=`<b>Votação encerrada</b><small>a próxima abre depois do episódio de terça</small>`;}
+function renderCast(){$("#castGrid").innerHTML=CAST.map(c=>`<article class="cc${c.st==="in"?"":" fora"}${PEDRA[c.id]&&c.st!=="in"?" pedra":""}">${PEDRA[c.id]&&c.st!=="in"?`<img class="estatua" src="${PEDRA[c.id]}" alt="${esc(c.name)} petrificada">`:ava(c.id)}<b>${esc(c.name)}</b><a class="ig" href="https://instagram.com/${esc(c.ig)}" rel="noopener">@${esc(c.ig)}</a><span class="tag${c.st==="in"?"":" out"}">${c.st==="in"?"Na disputa":esc(c.note||"Fora")}</span></article>`).join("")}
+function renderAll(){renderCoroa();renderWeek()}
+let toastT;function toast(t){const el=$("#toast");el.textContent=t;el.style.display="block";clearTimeout(toastT);toastT=setTimeout(()=>el.style.display="none",3500)}
+function note(sel,t,warn){const el=$(sel);el.hidden=!t;el.textContent=t||"";el.classList.toggle("warn",!!warn)}
+/* ===== Votos ===== */
+/* Duas urnas, mesmo site:
+   - dentro do Claude (link do artifact): banco do próprio artifact
+   - no GitHub Pages: Firebase Realtime Database, com a config abaixo preenchida */
+async function vote(poll,id,btn){
+ const w=poll==="coroa"?"coroa":(openWeek()||{}).id;if(!db||!canVote||!w)return;
+ btn.disabled=true;
+ try{await db.vote(w,poll,id);
+  const s=document.createElement("span");s.className="plus";s.textContent="+1";
+  const b=document.querySelector(`.vote[data-poll="${poll}"][data-id="${id}"]`);if(b){b.appendChild(s);setTimeout(()=>s.remove(),900)}}
+ catch(e){const c=e&&e.code;
+  if(c==="invalid_argument"){canVote=false;renderAll();note("#coroaNote","Este link está em modo só leitura pra você: dá pra ver o placar, mas não votar.",true)}
+  else if(c==="resource_exhausted")toast("Calma, torcida! Muitos votos seguidos. Espera um segundinho e vota de novo.");
+  else if(c==="quota_exceeded")toast("A urna encheu. Avisa o dono do site.");
+  else toast("O voto não foi registrado agora. Tenta de novo.")}
+ finally{setTimeout(()=>{const b=document.querySelector(`.vote[data-poll="${poll}"][data-id="${id}"]`);if(b&&canVote)b.disabled=false},500)}}
+function apply(key,o){if(key==="coroa")counts.coroa=o.coroa||{};else for(const p of POLLS)counts[p.k]=o[p.k]||{};}
+function listen(w,key,noteSel){const t=setTimeout(()=>note(noteSel,"Os votos estão demorando pra carregar. O placar pode estar desatualizado."),10000);
+ db.listen(w,(o,fresh)=>{apply(key,o);ready[key]=true;if(fresh){clearTimeout(t);note(noteSel,"")}renderAll()},
+  e=>{clearTimeout(t);note(noteSel,"Não deu pra carregar os votos agora.",true)});}
+function claudeUrna(store){return{
+ vote:(w,p,c)=>store.collection("votes").add({w,p,c,t:now()}),
+ listen:(w,next,err)=>store.collection("votes").where("w","==",w).onSnapshot(s=>{const o={};
+  for(const d of s.docs){const v=d.data()||{};if(!v.p||!v.c)continue;(o[v.p]??={})[v.c]=(o[v.p][v.c]||0)+1}
+  next(o,!s.metadata.fromCache)},err)}}
+async function firebaseUrna(cfg){const base="https://www.gstatic.com/firebasejs/10.12.2/";
+ const {initializeApp}=await import(base+"firebase-app.js");
+ const {getDatabase,ref,onValue,set,increment}=await import(base+"firebase-database.js");
+ const rtdb=getDatabase(initializeApp(cfg));
+ return{vote:(w,p,c)=>set(ref(rtdb,`votes/${w}/${p}/${c}`),increment(1)),
+  listen:(w,next,err)=>onValue(ref(rtdb,`votes/${w}`),s=>next(s.val()||{},true),err)}}
+document.addEventListener("click",e=>{const v=e.target.closest(".vote");if(v)vote(v.dataset.poll,v.dataset.id,v)});
+$("#goCoroa").addEventListener("click",()=>document.getElementById("coroa").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"}));
+renderCast();renderAll();setInterval(()=>{tick();if(!openWeek())renderWeek()},30000);
+(async()=>{const C=window.claude;
+ const off=t=>{renderAll();note("#coroaNote",t||"A votação não está disponível neste link.",true)};
+ if(C&&C.use){
+  let store=null;try{store=await C.use("db")}catch(e){}
+  if(!store){off();return}
+  db=claudeUrna(store);
+  try{const u=await C.use("user");const can=u?await u.can("data.write"):null;if(can===false)canVote=false}catch(e){}
+  if(!canVote)note("#coroaNote","Seu acesso a este link é só de leitura: dá pra ver o placar, mas não votar.",true);
+ }else if(FIREBASE_CONFIG.databaseURL){
+  try{db=await firebaseUrna(FIREBASE_CONFIG)}catch(e){off("Não deu pra conectar na urna agora. Recarregue a página.");return}
+ }else{off("Votação ainda não configurada: preencha FIREBASE_CONFIG no index.html.");return}
+ renderAll();
+ listen("coroa","coroa","#coroaNote");
+ listen(shownWeek().id,"week","#weekNote");
+})();
+}
+
+{const m=document.getElementById("carta"),b=document.getElementById("abrirCarta");let last=null;
+ const abrir=()=>{last=document.activeElement;m.hidden=false;document.body.style.overflow="hidden";const pp=m.querySelector(".carta-papel");pp.scrollTop=0;document.getElementById("okCarta").focus({preventScroll:true})};
+ const fechar=()=>{m.hidden=true;document.body.style.overflow="";(last||b).focus();try{localStorage.setItem("cartaLida","1")}catch(e){}};
+ b.addEventListener("click",abrir);document.getElementById("fecharCarta").addEventListener("click",fechar);document.getElementById("okCarta").addEventListener("click",fechar);
+ m.addEventListener("click",e=>{if(e.target===m)fechar()});document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!m.hidden)fechar()});}
+</script>
+</body>
+</html>
