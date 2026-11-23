@@ -109,6 +109,8 @@ ol.rank{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .ph img{width:100%;height:100%;object-fit:cover}
 .ph svg{width:46px;height:46px;display:block;margin:0 auto 6px;color:var(--o3)}
 .lk .nm{font-size:15px;white-space:normal}
+.lk.semfoto{align-content:end}
+.lk .nm{display:block;color:#2b1c24;-webkit-text-fill-color:#2b1c24;opacity:1;visibility:visible;min-height:1.3em;line-height:1.3;font-family:"Cormorant Garamond",Georgia,"Times New Roman",serif}
 .lk .ln{display:flex;justify-content:space-between;gap:8px;align-items:baseline;font:600 15px var(--ui)}
 .lk .ln .meta{font-weight:400}
 .lk .vote{width:100%}
@@ -450,7 +452,7 @@ const HANGER=`<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-
 function voteCards(w,poll,ids,imgs,open,o){o=o||{};const {tot,list}=ranked(poll,ids),lead=list[0]&&list[0].n?list[0].id:null,c0=counts[poll],r=w.real||{};
  return abc(ids).map(id=>{const n=c0[id]||0,p=tot?Math.round(n*100/tot):0,c=byId[id];
   const tag=o.fone?`<span class="tag out">No Flop</span>`:o.real?(r.prova===id?`<span class="tag">Venceu a prova</span>`:r.elim===id?`<span class="tag out">Eliminada</span>`:""):"";
-  return `<li class="lk${o.fone?" fone":""}${id===lead?" top":""}"><div class="ph">${imgs[id]?`<img src="${imgs[id]}" alt="${o.alt} de ${esc(c.name)}" loading="lazy">`:`<div>${o.icon}${o.ph}</div>`}</div><div class="nm">${esc(c.name)}</div>${tag}<div class="bar"><i style="width:${p}%"></i></div><div class="ln"><b>${p}%</b><span class="meta" style="margin:0">${fmt(n)} voto${n===1?"":"s"}</span></div><button type="button" class="vote" data-poll="${poll}" data-id="${id}" ${open&&canVote&&db?"":"disabled"} aria-label="Votar em ${esc(c.name)}">Votar</button></li>`}).join("")}
+  return `<li class="lk${o.fone?" fone":""}${imgs[id]?"":" semfoto"}${id===lead?" top":""}">${imgs[id]?`<div class="ph"><img src="${imgs[id]}" alt="${o.alt} de ${esc(c.name)}" loading="lazy"></div>`:""}<div class="nm">${esc(c.name)}</div>${tag}<div class="bar"><i style="width:${p}%"></i></div><div class="ln"><b>${p}%</b><span class="meta" style="margin:0">${fmt(n)} voto${n===1?"":"s"}</span></div><button type="button" class="vote" data-poll="${poll}" data-id="${id}" ${open&&canVote&&db?"":"disabled"} aria-label="Votar em ${esc(c.name)}">Votar</button></li>`}).join("")}
 const CAMERA=`<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16h8l3-5h14l3 5h8v22H6z"/><circle cx="24" cy="26" r="7"/></svg>`;
 function provaCards(w,flop){const P=(flop?w.flops:w.provas)||{},r=w.real||{};
  return (flop?w.cast.filter(id=>P[id]):w.cast).map(id=>{const c=byId[id],tag=flop?`<span class="tag out">No Flop</span>`:r.prova===id?`<span class="tag">Venceu a prova</span>`:r.elim===id?`<span class="tag out">Eliminada</span>`:"";
