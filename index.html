@@ -282,6 +282,13 @@ section.coroa{overflow:visible;overflow-x:clip}
 @media(max-width:720px){.flopv{grid-template-columns:1fr}.flopv .iphone{width:min(68%,260px);margin:0 auto}}
 @media(max-width:900px){.retrato-q{margin-left:auto!important;margin-right:auto!important}.coroa .wrap>*:has(.retrato-q){justify-self:center;text-align:center;width:100%;display:flex;flex-direction:column;align-items:center}}
 @media(max-width:600px){.leader{justify-content:center;width:100%}.leader #goCoroa{margin:0 auto}}
+@media(max-width:600px){
+ body{display:flex;flex-direction:column}body>*{order:2;width:100%}body>.capa{order:0}body>.fan{order:1}
+ header.topo .wrap{flex-direction:column;align-items:center!important}
+ header.topo .logo-wrap{flex-direction:column;gap:6px;width:100%}
+ .logo-img img{width:min(72vw,300px)}
+ header.topo .leader{padding-top:10px}
+}
 </style>
 
 </head>
