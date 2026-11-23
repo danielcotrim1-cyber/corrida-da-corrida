@@ -271,6 +271,15 @@ section.coroa{overflow:visible;overflow-x:clip}
 @keyframes coroaFlutua{0%,100%{transform:translateY(0) rotateY(-14deg) rotateZ(-3deg)}25%{transform:translateY(-7%) rotateY(0deg) rotateZ(0deg)}50%{transform:translateY(-2%) rotateY(14deg) rotateZ(3deg)}75%{transform:translateY(-8%) rotateY(0deg) rotateZ(0deg)}}
 @keyframes brilho{0%,100%{opacity:0;transform:scale(.3)}50%{opacity:1;transform:scale(1.6)}}
 @media(prefers-reduced-motion:reduce){.coroa3d img,.coroa3d i{animation:none}}
+/* prova do Flop: vídeo no iPhone + ícones de quem está no Flop */
+.flopv{display:grid;grid-template-columns:minmax(200px,280px) minmax(0,1fr);gap:clamp(18px,4vw,44px);align-items:center;margin-top:14px}
+.iphone{position:relative;aspect-ratio:540/1174;border-radius:15% / 7%;padding:3.2%;background:linear-gradient(145deg,#3a3a3e,#0d0d10 40%,#2a2a2e);box-shadow:0 0 0 2px #8d7552,0 0 0 3px #1a1a1d,0 24px 40px rgba(43,12,24,.5),inset 0 0 0 1.5px rgba(255,255,255,.12)}
+.iphone video{display:block;width:100%;height:100%;object-fit:cover;border-radius:12.5% / 5.8%;background:#000}
+.iphone::before,.iphone::after{content:"";position:absolute;width:3px;background:#1d1d20;border-radius:2px}
+.iphone::before{left:-3px;top:18%;height:7%;box-shadow:0 60px 0 #1d1d20}.iphone::after{right:-3px;top:24%;height:11%}
+.iphone .som{position:absolute;right:7%;bottom:4.2%;width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.35);background:rgba(20,10,16,.55);color:#fff;font-size:17px;cursor:pointer;backdrop-filter:blur(4px)}
+.flopv .rank{margin:0}
+@media(max-width:720px){.flopv{grid-template-columns:1fr}.flopv .iphone{width:min(68%,260px);margin:0 auto}}
 </style>
 
 </head>
@@ -421,6 +430,7 @@ const WEEKS=[
   real:{prova:"talitah",elim:"rhanyane"},
   resumo:{prova:"Night of Cola Quente com tema Baile de Máscaras da realeza: cada participante criou um look completo e uma máscara feitos à mão, principalmente com cola quente, com referência ao sabor de Smirnoff Ice de cada um. Gabriel, que tinha vantagem da prova anterior, escolheu Talitah e Jheny para trabalharem ligadas uma à outra durante uma hora. Mesmo assim, Talitah venceu, sua segunda vitória na temporada, com Bárbara e Latyffa entre os destaques. Matthel não terminou a calça e o blazer, Aysha foi criticada pelo acabamento técnico e o acabamento de Breia também foi questionado. Walério Araújo foi jurado convidado, e Mady e Kitty voltaram para orientar o elenco.",flop:"Matthel e Aysha Pink foram direto para a Prova do Flop; Breia foi a terceira, escolhida pelas três mais bem avaliadas da noite. A prova do Flop e a eliminação vão ao ar no próximo episódio, na terça às 20h. No começo do episódio, saiu o resultado do Flop da semana anterior: Rhanyane foi eliminada."},
   provas:{aysha:"assets/provas/s4-aysha.webp",barbara:"assets/provas/s4-barbara.webp",breia:"assets/provas/s4-breia.webp",gabriel:"assets/provas/s4-gabriel.webp",jheny:"assets/provas/s4-jheny.webp",latyffa:"assets/provas/s4-latyffa.webp",matthel:"assets/provas/s4-matthel.webp",sttefone:"assets/provas/s4-sttefone.webp",talitah:"assets/provas/s4-talitah.webp"}, /* foto do resultado da prova */
+  flopVideo:{src:"assets/flop/s4-video.mp4",poster:"assets/flop/s4-video.jpg"}, /* vídeo da prova do Flop dentro do iPhone */
   flops:{aysha:"assets/flop/s4-aysha.webp",breia:"assets/flop/s4-breia.webp",matthel:"assets/flop/s4-matthel.webp"}, /* quem foi pro Flop: foto da prova do Flop */
   looks:{aysha:"assets/looks/s4-aysha.webp",barbara:"assets/looks/s4-barbara.webp",breia:"assets/looks/s4-breia.webp",gabriel:"assets/looks/s4-gabriel.webp",jheny:"assets/looks/s4-jheny.webp",latyffa:"assets/looks/s4-latyffa.webp",matthel:"assets/looks/s4-matthel.webp",sttefone:"assets/looks/s4-sttefone.webp",talitah:"assets/looks/s4-talitah.webp"} /* foto do look da semana */}
 ];
@@ -477,6 +487,7 @@ function renderWeek(){const w=shownWeek(),open=!!openWeek()&&openWeek().id===w.i
   const P=w.provas||{},F=w.flops||{},txt=t=>t?`<p class="txt">${esc(t)}</p>`:"",R=w.resumo||{};
   const body=p.k==="prova"?txt(R.prova)+`<ol class="looks">${voteCards(w,"prova",ids,P,open,{real:1,alt:"Resultado da prova",icon:CAMERA,ph:"Foto da prova"})}</ol>`
    :p.k==="flop"?`<ol class="looks">${voteCards(w,"flop",ids,P,open,{real:1,alt:"Resultado da prova",icon:CAMERA,ph:"Foto da prova"})}</ol>`
+   :p.k==="elim"&&w.flopVideo?txt(R.flop)+`<div class="flopv"><div class="iphone"><video src="${w.flopVideo.src}" poster="${w.flopVideo.poster}" autoplay muted loop playsinline preload="metadata" aria-label="Vídeo da prova do Flop"></video><button type="button" class="som" aria-label="Ativar som">🔇</button></div><ol class="rank">${rows("elim",ids,open)}</ol></div>`
    :p.k==="elim"?txt(R.flop)+`<ol class="looks">${voteCards(w,"elim",ids,F,open,{fone:Object.keys(F).length>0,alt:"Prova do Flop",icon:CAMERA,ph:"Foto da prova do Flop"})}</ol>`
    :`<ol class="looks">${voteCards(w,"look",ids,w.looks||{},open,{alt:"Look",icon:HANGER,ph:"Foto do look"})}</ol>`;
   return `<article class="panel" id="p-${p.k}" aria-labelledby="q-${p.k}"><div class="pn">${i+1} de ${POLLS.length}</div><h3 id="q-${p.k}">${p.q}</h3><p class="meta">${meta}</p>${body}</article>`}).join("");
@@ -547,6 +558,7 @@ renderCast();renderAll();setInterval(()=>{tick();if(!openWeek())renderWeek()},30
  const fechar=()=>{m.hidden=true;document.body.style.overflow="";(last||b).focus();try{localStorage.setItem("cartaLida","1")}catch(e){}};
  b.addEventListener("click",abrir);document.getElementById("fecharCarta").addEventListener("click",fechar);document.getElementById("okCarta").addEventListener("click",fechar);
  m.addEventListener("click",e=>{if(e.target===m)fechar()});document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!m.hidden)fechar()});}
+document.addEventListener("click",e=>{const b=e.target.closest(".iphone .som");if(!b)return;const v=b.parentElement.querySelector("video");v.muted=!v.muted;if(!v.muted)v.play();b.textContent=v.muted?"🔇":"🔊";b.setAttribute("aria-label",v.muted?"Ativar som":"Desativar som")});
 </script>
 </body>
 </html>
