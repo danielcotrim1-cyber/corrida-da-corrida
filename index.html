@@ -261,6 +261,16 @@ header.topo .logo-wrap{display:flex;align-items:center;gap:14px}
 .carta-x{position:absolute;top:10px;right:14px;background:none;border:0;font:400 30px/1 var(--serif);color:#5e1430;cursor:pointer}
 @media(max-width:600px){.carta-papel{padding:38px 22px 28px}.carta h2{font-size:18px}.carta-btn svg{width:50px;height:38px}.carta-btn span{font-size:9px}}
 .lk .tag{justify-self:start}.lk.fone .bar{width:100%}.lk.fone .ln{width:100%}.lk.fone .vote{width:100%}.lk.fone.top .ph img{filter:drop-shadow(0 0 10px rgba(250,211,118,.9)) drop-shadow(0 14px 22px rgba(43,12,24,.45))}
+/* coroa 3D flutuando na cabeça da winner */
+.retrato-q{position:relative;margin-top:clamp(70px,11vw,130px)!important}
+section.coroa{overflow:visible;overflow-x:clip}
+.coroa3d{position:absolute;width:36%;z-index:3;transform:translate(-50%,-80%);pointer-events:none;perspective:600px}
+.coroa3d img{display:block;width:100%;height:auto;transform-origin:50% 90%;animation:coroaFlutua 4.2s ease-in-out infinite;filter:drop-shadow(0 10px 14px rgba(43,12,24,.55)) drop-shadow(0 0 18px rgba(250,211,118,.45))}
+.coroa3d i{position:absolute;width:10px;height:10px;border-radius:50%;background:radial-gradient(circle,#fff 0 20%,rgba(255,236,190,.9) 35%,transparent 70%);opacity:0;animation:brilho 2.8s ease-in-out infinite}
+.coroa3d i:nth-of-type(1){left:48%;top:6%}.coroa3d i:nth-of-type(2){left:22%;top:38%;animation-delay:.9s}.coroa3d i:nth-of-type(3){left:76%;top:30%;animation-delay:1.8s}
+@keyframes coroaFlutua{0%,100%{transform:translateY(0) rotateY(-14deg) rotateZ(-3deg)}25%{transform:translateY(-7%) rotateY(0deg) rotateZ(0deg)}50%{transform:translateY(-2%) rotateY(14deg) rotateZ(3deg)}75%{transform:translateY(-8%) rotateY(0deg) rotateZ(0deg)}}
+@keyframes brilho{0%,100%{opacity:0;transform:scale(.3)}50%{opacity:1;transform:scale(1.6)}}
+@media(prefers-reduced-motion:reduce){.coroa3d img,.coroa3d i{animation:none}}
 </style>
 
 </head>
@@ -387,6 +397,9 @@ const CAST=[
  {id:"talitah",name:"Talitah Sampaio Girls",ig:"sampaiogirls",st:"in"}
 ];
 const PEDRA={paizinho:"assets/paizinho-pedra.webp",peter:"assets/peter-pedra.webp",rhanyane:"assets/rhanyane-pedra.webp"}; /* eliminadas petrificadas no elenco */
+/* coroa de cola quente 3D na cabeça de quem lidera · x/y = topo da cabeça em % do retrato */
+const CABECA={aysha:[45,12],barbara:[47,4],breia:[48,3],gabriel:[52,3],jheny:[45,3],latyffa:[48,3],matthel:[45,10],peter:[38,3],rhanyane:[45,5],paizinho:[47,3],sttefone:[47,4],talitah:[50,12]};
+const coroaEm=id=>{const [x,y]=CABECA[id]||[50,4];return `<span class="coroa3d" style="left:${x}%;top:${y}%" aria-hidden="true"><img src="assets/coroa.webp" alt=""><i></i><i></i><i></i></span>`};
 const PHOTOS={ /* retrato: capa (com moldura já aplicada) · icone: avatar redondo do ranking */
  aysha:{retrato:"assets/aysha-retrato.webp?v=2",icone:"assets/aysha-icone.webp?v=2"},
  barbara:{retrato:"assets/barbara-retrato.webp",icone:"assets/barbara-icone.webp"},
@@ -444,12 +457,12 @@ function renderCoroa(){const ids=alive(),open=now()<FINAL,{tot,list}=ranked("cor
  $("#coroaList").innerHTML=rows("coroa",ids,open);
  $("#coroaMeta").textContent=ready.coroa?`${fmt(tot)} votos até agora · ${ids.length} na disputa`:(db?"Carregando votos…":"Placar indisponível neste link");
  const lead=list[0],temVoto=lead&&lead.n,destaque=temVoto?lead.id:(ids.find(i=>PHOTOS[i]&&PHOTOS[i].retrato)||null);
- const quadro=id=>PHOTOS[id]&&PHOTOS[id].retrato?`<figure class="retrato-q"><img src="${PHOTOS[id].retrato}" alt="${esc(byId[id].name)}"></figure>`
+ const quadro=id=>PHOTOS[id]&&PHOTOS[id].retrato?`<figure class="retrato-q">${coroaEm(id)}<img src="${PHOTOS[id].retrato}" alt="${esc(byId[id].name)}"></figure>`
   :`<figure class="retrato-q vazio"><div class="quadro"><span>${id?initials(byId[id].name):"?"}</span></div></figure>`;
  $("#throne").innerHTML=quadro(destaque)+`<div class="placa"><b>${destaque?esc(byId[destaque].name):"A coroa está vaga"}</b><span>${temVoto?`lidera a torcida com ${Math.round(lead.n*100/tot)}% dos votos`:(destaque?"ainda sem votos · vote e coloque sua favorita aqui":"o primeiro voto decide quem senta aqui")}</span></div>`;
  $("#leaderTxt").textContent=lead&&lead.n?`Coroa: ${byId[lead.id].name} lidera`:"Coroa: ninguém lidera ainda";}
 const HANGER=`<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14a4 4 0 1 1 6 3.5c-1.3.8-2 1.8-2 3.5v1L6 34h36L24 22"/></svg>`;
-function voteCards(w,poll,ids,imgs,open,o){o=o||{};const {tot,list}=ranked(poll,ids),lead=list[0]&&list[0].n?list[0].id:null,c0=counts[poll],r=w.real||{};
+function voteCards(w,poll,ids,imgs,open,o){o=o||{};if(Object.keys(imgs).length)ids=ids.filter(id=>imgs[id]);const {tot,list}=ranked(poll,ids),lead=list[0]&&list[0].n?list[0].id:null,c0=counts[poll],r=w.real||{};
  return abc(ids).map(id=>{const n=c0[id]||0,p=tot?Math.round(n*100/tot):0,c=byId[id];
   const tag=o.fone?`<span class="tag out">No Flop</span>`:o.real?(r.prova===id?`<span class="tag">Venceu a prova</span>`:r.elim===id?`<span class="tag out">Eliminada</span>`:""):"";
   return `<li class="lk${o.fone?" fone":""}${imgs[id]?"":" semfoto"}${id===lead?" top":""}">${imgs[id]?`<div class="ph"><img src="${imgs[id]}" alt="${o.alt} de ${esc(c.name)}" loading="lazy"></div>`:""}<div class="nm">${esc(c.name)}</div>${tag}<div class="bar"><i style="width:${p}%"></i></div><div class="ln"><b>${p}%</b><span class="meta" style="margin:0">${fmt(n)} voto${n===1?"":"s"}</span></div><button type="button" class="vote" data-poll="${poll}" data-id="${id}" ${open&&canVote&&db?"":"disabled"} aria-label="Votar em ${esc(c.name)}">Votar</button></li>`}).join("")}
