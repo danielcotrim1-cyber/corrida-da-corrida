@@ -283,12 +283,28 @@ section.coroa{overflow:visible;overflow-x:clip}
 @media(max-width:900px){.retrato-q{margin-left:auto!important;margin-right:auto!important}.coroa .wrap>*:has(.retrato-q){justify-self:center;text-align:center;width:100%;display:flex;flex-direction:column;align-items:center}}
 @media(max-width:600px){.leader{justify-content:center;width:100%}.leader #goCoroa{margin:0 auto}}
 @media(max-width:600px){
- body{display:flex;flex-direction:column}body>*{order:2;width:100%}body>.capa{order:0}body>.fan{order:1}
+ .fan{display:none}
  header.topo .wrap{flex-direction:column;align-items:center!important}
  header.topo .logo-wrap{flex-direction:column;gap:6px;width:100%}
  .logo-img img{width:min(72vw,300px)}
  header.topo .leader{padding-top:10px}
 }
+.capa{background:none!important}
+/* chamadas entre votações */
+.cta{display:grid;justify-items:center;gap:4px;text-align:center;text-decoration:none;margin:clamp(26px,4vw,44px) auto 0;max-width:560px;padding:18px 22px 20px;border-radius:18px;background:linear-gradient(180deg,#fbf3e2,#efdcbc);color:var(--tinta);box-shadow:0 0 0 2px #fad376,0 0 0 5px rgba(122,69,9,.35),0 0 22px 4px rgba(250,211,118,.45);animation:ctaPulse 2.6s ease-in-out infinite}
+.cta small{font:600 12px/1 var(--rotulo,var(--ui));letter-spacing:.16em;text-transform:uppercase;color:var(--vinho,#7a1f3d)}
+.cta b{font-family:var(--titulo);font-weight:700;font-size:clamp(19px,2.4vw,24px);letter-spacing:.04em;text-transform:uppercase;line-height:1.2}
+.cta span{font-family:var(--serif);font-style:italic;font-size:17px;color:#6b4a55}
+.cta:hover{transform:translateY(-2px)}
+.cta-in{margin-top:26px}
+@keyframes ctaPulse{0%,100%{box-shadow:0 0 0 2px #fad376,0 0 0 5px rgba(122,69,9,.35),0 0 16px 2px rgba(250,211,118,.35)}50%{box-shadow:0 0 0 2px #fad376,0 0 0 5px rgba(122,69,9,.35),0 0 30px 8px rgba(250,211,118,.6)}}
+@media(prefers-reduced-motion:reduce){.cta{animation:none}}
+/* abas de semanas */
+.abas{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 22px}
+.aba{display:grid;gap:3px;text-align:left;padding:10px 16px;border-radius:14px;border:1.5px solid rgba(250,211,118,.55);background:rgba(26,11,16,.45);color:#f4ecdc;font:600 15px/1.2 var(--titulo);letter-spacing:.05em;text-transform:uppercase;cursor:pointer}
+.aba small{font:italic 400 14px var(--serif);letter-spacing:0;text-transform:none;color:#d9b8c4}
+.aba.on{background:linear-gradient(180deg,#fbf3e2,#efdcbc);color:var(--tinta);border-color:#fad376;box-shadow:0 0 14px 2px rgba(250,211,118,.45)}
+.aba.on small{color:var(--vinho,#7a1f3d)}
 </style>
 
 </head>
@@ -363,12 +379,13 @@ section.coroa{overflow:visible;overflow-x:clip}
       <p class="note" id="coroaNote" hidden></p>
     </div>
   </div>
+  <a class="cta" href="#semana" id="ctaSemana"><small>Não acabou! Tem mais votação</small><b>Agora julgue a prova da semana</b><span>4 perguntas: prova, Flop, quem sai e melhor look ↓</span></a>
 </section>
 </div>
 
-<div class="orn" aria-hidden="true" style="margin-top:-14px;position:relative;z-index:1"><i></i></div>
 <section class="week band" id="semana" aria-labelledby="weekT">
   <div class="wrap">
+    <nav class="abas" id="abas" aria-label="Semanas" hidden></nav>
     <div class="head">
       <div><div class="ep" id="weekEp"></div><h2 id="weekT"></h2><p class="meta" id="weekSub" style="margin-top:8px"></p></div>
       <div class="clock" id="clock"></div>
@@ -391,6 +408,7 @@ section.coroa{overflow:visible;overflow-x:clip}
 
 <footer class="band">
   <div class="wrap">
+    <p><b>Site de fã.</b> Feito por fã, sem ligação com a DiaTV, o Diva Depressão ou a produção da Corrida das Blogueiras. Os votos daqui são só da torcida e não valem no programa. Assista aos episódios no YouTube da DiaTV.</p>
     <p><b>Corrida da Corrida das Blogueiras</b> é um projeto de fã. Nomes, marcas e imagens do programa pertencem aos seus donos.</p>
     <p>Votação livre e sem login: serve pra medir a torcida, não é pesquisa nem resultado oficial.</p>
   </div>
@@ -460,7 +478,10 @@ let db=null,canVote=true,ready={coroa:false,week:false};
 const $=s=>document.querySelector(s);
 const now=()=>Date.now();
 const openWeek=()=>WEEKS.find(w=>now()>=+new Date(w.opens)&&now()<+new Date(w.closes));
-const shownWeek=()=>openWeek()||[...WEEKS].filter(w=>now()>=+new Date(w.opens)).pop()||WEEKS[0];
+const startedWeeks=()=>WEEKS.filter(w=>now()>=+new Date(w.opens));
+const currentWeek=()=>openWeek()||startedWeeks().pop()||WEEKS[0];
+let selWeek=null;
+const shownWeek=()=>(selWeek&&WEEKS.find(w=>w.id===selWeek))||currentWeek();
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const initials=n=>n.split(/\s+/).slice(0,2).map(w=>w[0]).join("").toUpperCase();
 const ava=(id,cls="")=>{const c=byId[id],p=PHOTOS[id];return p&&p.icone?`<div class="ava ic ${cls}"><img src="${p.icone}" alt=""></div>`:`<div class="ava ${cls}" style="background:${c.color}">${initials(c.name)}</div>`};
@@ -489,6 +510,13 @@ const CAMERA=`<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-
 function provaCards(w,flop){const P=(flop?w.flops:w.provas)||{},r=w.real||{};
  return (flop?w.cast.filter(id=>P[id]):w.cast).map(id=>{const c=byId[id],tag=flop?`<span class="tag out">No Flop</span>`:r.prova===id?`<span class="tag">Venceu a prova</span>`:r.elim===id?`<span class="tag out">Eliminada</span>`:"";
   return `<li class="lk pv${flop?" fone":""}${!flop&&r.prova===id?" top":""}"><div class="ph">${P[id]?`<img src="${P[id]}" alt="${flop?"Prova do Flop":"Resultado da prova"} de ${esc(c.name)}" loading="lazy">`:`<div>${CAMERA}Foto da prova</div>`}</div><div class="nm">${esc(c.name)}</div>${tag}</li>`}).join("")}
+function renderAbas(w){const ws=startedWeeks(),el=$("#abas");if(ws.length<2){el.hidden=true;return}el.hidden=false;
+ const cur=currentWeek();
+ el.innerHTML=[...ws].reverse().map(x=>{const atual=x.id===cur.id,on=x.id===w.id;
+  return `<button type="button" class="aba${on?" on":""}" data-week="${x.id}" aria-pressed="${on}"><small>${atual&&openWeek()?"Votação aberta":"Resultado"}</small>Ep. ${x.ep} · ${esc(x.title)}</button>`}).join("")}
+function trocaSemana(id){if(id===shownWeek().id)return;selWeek=id===currentWeek().id?null:id;
+ for(const p of POLLS)counts[p.k]={};ready.week=false;if(typeof weekUnsub==="function")weekUnsub();
+ renderWeek();if(db)weekUnsub=listen(shownWeek().id,"week","#weekNote");}
 function renderWeek(){const w=shownWeek(),open=!!openWeek()&&openWeek().id===w.id;
  $("#weekEp").textContent=`Semana do episódio ${w.ep}`;$("#weekT").textContent=w.title;$("#weekSub").textContent=w.sub;
  $("#polls").innerHTML=POLLS.map((p,i)=>{const ids=p.k==="elim"&&w.flops&&Object.keys(w.flops).length?Object.keys(w.flops):w.cast,{tot}=ranked(p.k,ids);
@@ -499,11 +527,15 @@ function renderWeek(){const w=shownWeek(),open=!!openWeek()&&openWeek().id===w.i
    :p.k==="elim"&&w.flopVideo?txt(R.flop)+`<div class="flopv"><div class="iphone"><video src="${w.flopVideo.src}" poster="${w.flopVideo.poster}" autoplay muted loop playsinline preload="metadata" aria-label="Vídeo da prova do Flop"></video><button type="button" class="som" aria-label="Ativar som">🔇</button></div><ol class="rank">${rows("elim",ids,open)}</ol></div>`
    :p.k==="elim"?txt(R.flop)+`<ol class="looks">${voteCards(w,"elim",ids,F,open,{fone:Object.keys(F).length>0,alt:"Prova do Flop",icon:CAMERA,ph:"Foto da prova do Flop"})}</ol>`
    :`<ol class="looks">${voteCards(w,"look",ids,w.looks||{},open,{alt:"Look",icon:HANGER,ph:"Foto do look"})}</ol>`;
-  return `<article class="panel" id="p-${p.k}" aria-labelledby="q-${p.k}"><div class="pn">${i+1} de ${POLLS.length}</div><h3 id="q-${p.k}">${p.q}</h3><p class="meta">${meta}</p>${body}</article>`}).join("");
+  const nx=POLLS[i+1],cta=nx?`<a class="cta cta-in" href="#p-${nx.k}"><small>Próxima votação · ${i+2} de ${POLLS.length}</small><b>${nx.q}</b><span>Continue julgando ↓</span></a>`
+   :`<a class="cta cta-in" href="#coroa"><small>Você julgou a semana toda!</small><b>Volte e vote na winner</b><span>Quem leva a Coroa de Cola Quente? ↑</span></a>`;
+  return `<article class="panel" id="p-${p.k}" aria-labelledby="q-${p.k}"><div class="pn">${i+1} de ${POLLS.length}</div><h3 id="q-${p.k}">${p.q}</h3><p class="meta">${meta}</p>${body}${open?cta:""}</article>`}).join("");
+ renderAbas(w);
  const r=w.real||{},item=(lbl,id)=>`<div><dt>${lbl}</dt><dd>${id?esc(byId[id].name):"a confirmar"}</dd></div>`;
  $("#real").innerHTML=`<h3>E no programa?</h3><dl>${item("Venceu a prova",r.prova)}${item("Foi eliminada",r.elim)}${r.flop?item("Foi pro Flop",r.flop):""}</dl>`;
  tick();}
 function tick(){const w=openWeek();
+ if(selWeek){$("#clock").innerHTML=`<b>Votação encerrada</b><small>esse é o resultado final da torcida</small>`;return}
  if(w){const ms=+new Date(w.closes)-now(),d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.floor(ms%36e5/6e4);
   $("#clock").innerHTML=`<b>Votação aberta</b><span class="t">${d}d<em>❦</em>${h}h<em>❦</em>${m}min</span><small>fecha terça, às 20h</small>`}
  else $("#clock").innerHTML=`<b>Votação encerrada</b><small>a próxima abre depois do episódio de terça</small>`;}
@@ -529,7 +561,7 @@ async function vote(poll,id,btn){
  finally{setTimeout(()=>{const b=document.querySelector(`.vote[data-poll="${poll}"][data-id="${id}"]`);if(b&&canVote)b.disabled=false},500)}}
 function apply(key,o){if(key==="coroa")counts.coroa=o.coroa||{};else for(const p of POLLS)counts[p.k]=o[p.k]||{};}
 function listen(w,key,noteSel){const t=setTimeout(()=>note(noteSel,"Os votos estão demorando pra carregar. O placar pode estar desatualizado."),10000);
- db.listen(w,(o,fresh)=>{apply(key,o);ready[key]=true;if(fresh){clearTimeout(t);note(noteSel,"")}renderAll()},
+ return db.listen(w,(o,fresh)=>{apply(key,o);ready[key]=true;if(fresh){clearTimeout(t);note(noteSel,"")}renderAll()},
   e=>{clearTimeout(t);note(noteSel,"Não deu pra carregar os votos agora.",true)});}
 function claudeUrna(store){return{
  vote:(w,p,c)=>store.collection("votes").add({w,p,c,t:now()}),
@@ -542,7 +574,8 @@ async function firebaseUrna(cfg){const base="https://www.gstatic.com/firebasejs/
  const rtdb=getDatabase(initializeApp(cfg));
  return{vote:(w,p,c)=>set(ref(rtdb,`votes/${w}/${p}/${c}`),increment(1)),
   listen:(w,next,err)=>onValue(ref(rtdb,`votes/${w}`),s=>next(s.val()||{},true),err)}}
-document.addEventListener("click",e=>{const v=e.target.closest(".vote");if(v)vote(v.dataset.poll,v.dataset.id,v)});
+let weekUnsub=null;
+document.addEventListener("click",e=>{const v=e.target.closest(".vote");if(v)vote(v.dataset.poll,v.dataset.id,v);const a=e.target.closest(".aba");if(a)trocaSemana(a.dataset.week)});
 $("#goCoroa").addEventListener("click",()=>document.getElementById("coroa").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"}));
 renderCast();renderAll();setInterval(()=>{tick();if(!openWeek())renderWeek()},30000);
 (async()=>{const C=window.claude;
@@ -558,7 +591,7 @@ renderCast();renderAll();setInterval(()=>{tick();if(!openWeek())renderWeek()},30
  }else{off("Votação ainda não configurada: preencha FIREBASE_CONFIG no index.html.");return}
  renderAll();
  listen("coroa","coroa","#coroaNote");
- listen(shownWeek().id,"week","#weekNote");
+ weekUnsub=listen(shownWeek().id,"week","#weekNote");
 })();
 }
 
