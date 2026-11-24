@@ -308,6 +308,14 @@ section.coroa{overflow:visible;overflow-x:clip}
 .cta b{color:#2b1c24!important;-webkit-text-fill-color:#2b1c24!important;background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;text-shadow:none!important;filter:none!important;opacity:1!important}
 .leader .lt{display:none!important}
 section.cast.band{padding-top:0}
+.outros{margin-top:26px;border-top:1.5px solid rgba(122,69,9,.3);padding-top:18px}
+.outros summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:center;gap:10px;font:700 16px/1.2 var(--titulo);letter-spacing:.1em;text-transform:uppercase;color:var(--tinta);padding:12px 18px;border-radius:999px;background:rgba(251,243,226,.75);box-shadow:0 0 0 1.5px #d9b46a;max-width:420px;margin:0 auto}
+.outros summary::-webkit-details-marker{display:none}
+.outros summary::after{content:"▾";font-size:14px;transition:transform .2s}
+.outros[open] summary::after{transform:rotate(180deg)}
+.outros h4{font:700 15px var(--titulo);letter-spacing:.08em;text-transform:uppercase;margin:22px 0 10px;color:var(--vinho,#7a1f3d)}
+.looks.mini{list-style:none;padding:0;margin:0}
+.looks.mini .lk{gap:6px}
 </style>
 
 </head>
@@ -464,7 +472,7 @@ const WEEKS=[
   flops:{aysha:"assets/flop/s4-aysha.webp",breia:"assets/flop/s4-breia.webp",matthel:"assets/flop/s4-matthel.webp"}, /* quem foi pro Flop: foto da prova do Flop */
   looks:{aysha:"assets/looks/s4-aysha.webp",barbara:"assets/looks/s4-barbara.webp",breia:"assets/looks/s4-breia.webp",gabriel:"assets/looks/s4-gabriel.webp",jheny:"assets/looks/s4-jheny.webp",latyffa:"assets/looks/s4-latyffa.webp",matthel:"assets/looks/s4-matthel.webp",sttefone:"assets/looks/s4-sttefone.webp",talitah:"assets/looks/s4-talitah.webp"} /* foto do look da semana */},
  {id:"s5",ep:5,title:"Publi Secrets: Black Friday",sub:"Live de Black Friday do TikTok Shop, apresentada em dupla no palco.",
-  opens:"2026-11-24T21:00:00-03:00",closes:"2026-12-01T20:00:00-03:00",
+  opens:"2026-11-24T20:00:00-03:00",closes:"2026-12-01T20:00:00-03:00",
   cast:["aysha","barbara","gabriel","jheny","latyffa","matthel","sttefone","talitah"],
   real:{},
   resumo:{prova:"Publi Secrets edição Black Friday: em duplas, as participantes apresentaram no palco uma live de Black Friday do TikTok Shop, com 5 produtos por dupla. O briefing exigia citar dois diferenciais de cada produto, dizer a duração da campanha (24/11 a 03/12), usar o slogan “Se é trend, tá no TikTok Shop” e reforçar as condições especiais, como frete grátis e 12x sem juros, sem ignorar o público. Foram 50 minutos de preparação e 5 de apresentação, avaliados por respeito ao briefing, desenvoltura e criatividade."},
@@ -521,6 +529,9 @@ const CAMERA=`<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-
 function provaCards(w,flop){const P=(flop?w.flops:w.provas)||{},r=w.real||{};
  return (flop?w.cast.filter(id=>P[id]):w.cast).map(id=>{const c=byId[id],tag=flop?`<span class="tag out">No Flop</span>`:r.prova===id?`<span class="tag">Venceu a prova</span>`:r.elim===id?`<span class="tag out">Eliminada</span>`:"";
   return `<li class="lk pv${flop?" fone":""}${!flop&&r.prova===id?" top":""}"><div class="ph">${P[id]?`<img src="${P[id]}" alt="${flop?"Prova do Flop":"Resultado da prova"} de ${esc(c.name)}" loading="lazy">`:`<div>${CAMERA}Foto da prova</div>`}</div><div class="nm">${esc(c.name)}</div>${tag}</li>`}).join("")}
+function outrosLooks(w){const ant=WEEKS.filter(x=>x.id!==w.id&&x.looks&&Object.keys(x.looks).length&&now()>=+new Date(x.opens)).reverse();
+ if(!ant.length)return"";
+ return `<details class="outros"><summary>Looks das outras semanas</summary>${ant.map(x=>`<h4>Ep. ${x.ep} · ${esc(x.title)}</h4><ul class="looks mini">${abc(Object.keys(x.looks).filter(id=>byId[id])).map(id=>`<li class="lk"><div class="ph"><img src="${x.looks[id]}" alt="Look de ${esc(byId[id].name)} no ep. ${x.ep}" loading="lazy"></div><div class="nm">${esc(byId[id].name)}</div></li>`).join("")}</ul>`).join("")}</details>`}
 function renderAbas(w){const ws=startedWeeks(),el=$("#abas");if(ws.length<2){el.hidden=true;return}el.hidden=false;
  const cur=currentWeek();
  el.innerHTML=[...ws].reverse().map(x=>{const atual=x.id===cur.id,on=x.id===w.id;
@@ -537,7 +548,7 @@ function renderWeek(){const w=shownWeek(),open=!!openWeek()&&openWeek().id===w.i
    :p.k==="flop"?`<ol class="looks">${voteCards(w,"flop",ids,P,open,{real:1,alt:"Resultado da prova",icon:CAMERA,ph:"Foto da prova"})}</ol>`
    :p.k==="elim"&&w.flopVideo?txt(R.flop)+`<div class="flopv"><div class="iphone"><video src="${w.flopVideo.src}" poster="${w.flopVideo.poster}" autoplay muted loop playsinline preload="metadata" aria-label="Vídeo da prova do Flop"></video><button type="button" class="som" aria-label="Ativar som">🔇</button></div><ol class="rank">${rows("elim",ids,open)}</ol></div>`
    :p.k==="elim"?txt(R.flop)+`<ol class="looks">${voteCards(w,"elim",ids,F,open,{fone:Object.keys(F).length>0,alt:"Prova do Flop",icon:CAMERA,ph:"Foto da prova do Flop"})}</ol>`
-   :`<ol class="looks">${voteCards(w,"look",ids,w.looks||{},open,{alt:"Look",icon:HANGER,ph:"Foto do look"})}</ol>`;
+   :`<ol class="looks">${voteCards(w,"look",ids,w.looks||{},open,{alt:"Look",icon:HANGER,ph:"Foto do look"})}</ol>${outrosLooks(w)}`;
   const nx=POLLS[i+1],cta=nx?`<a class="cta cta-in" href="#p-${nx.k}"><small>Próxima votação · ${i+2} de ${POLLS.length}</small><b>${nx.q}</b><span>Continue julgando ↓</span></a>`
    :`<a class="cta cta-in" href="#coroa"><small>Você julgou a semana toda!</small><b>Volte e vote na winner</b><span>Quem leva a Coroa de Cola Quente? ↑</span></a>`;
   return `<article class="panel" id="p-${p.k}" aria-labelledby="q-${p.k}"><div class="pn">${i+1} de ${POLLS.length}</div><h3 id="q-${p.k}">${p.q}</h3><p class="meta">${meta}</p>${body}${open?cta:""}</article>`}).join("");
