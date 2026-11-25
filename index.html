@@ -392,6 +392,14 @@ section.cast.band{padding-top:0}
 .real{margin-bottom:clamp(44px,5vw,64px)!important}
 #semana .wrap,#coroa .wrap{padding-left:clamp(10px,2vw,24px);padding-right:clamp(10px,2vw,24px)}
 .real dd .prox{display:block;font:italic 400 15px var(--serif);color:#e6c6d2;-webkit-text-fill-color:#e6c6d2;margin-top:2px}
+/* retrato da winner alinhado ao ranking (desktop) */
+@media(min-width:901px){
+ section.coroa{padding-top:clamp(120px,12vw,170px)}
+ .coroa .wrap{align-items:start!important;grid-template-columns:minmax(0,6fr) minmax(0,7fr)!important}
+ .retrato-q{margin-top:var(--rq-up,0)!important}
+ .retrato-q>img{height:var(--rq-h,auto);width:auto;max-width:100%;margin:0 auto}
+ .retrato-q{width:auto!important;display:flex;justify-content:center}
+}
 </style>
 
 </head>
@@ -601,6 +609,11 @@ function rows(poll,ids,open){const {tot,list}=ranked(poll,ids),lead=list[0]&&lis
  return abc(ids).map(id=>{const n=c0[id]||0,p=tot?Math.round(n*100/tot):0,c=byId[id];
   return `<li class="row${id===lead?" top":""}">${ava(id)}<div class="info"><div class="nm">${esc(c.name)}</div><div class="bar"><i style="width:${p}%"></i></div></div><div class="num">${p}%<small>${fmt(n)} voto${n===1?"":"s"}</small></div><button type="button" class="vote" data-poll="${poll}" data-id="${id}" ${open&&canVote&&db?"":"disabled"} aria-label="Votar em ${esc(c.name)}">Votar</button></li>`}).join("")}
 const alive=()=>CAST.filter(c=>c.st==="in").map(c=>c.id);
+function alinhaRetrato(){const b=document.querySelector(".coroa .board"),f=document.querySelector(".retrato-q>img");if(!b||!f)return;
+ if(innerWidth<=900){document.documentElement.style.removeProperty("--rq-h");return}
+ const col=f.closest(".trono2").clientWidth,h=Math.min(b.offsetHeight/0.881,col*1.12*800/476);
+ document.documentElement.style.setProperty("--rq-h",h+"px");document.documentElement.style.setProperty("--rq-up",(-0.108*h)+"px")}
+addEventListener("resize",alinhaRetrato);addEventListener("load",alinhaRetrato);document.fonts&&document.fonts.ready.then(alinhaRetrato);
 function renderCoroa(){const ids=alive(),open=now()<FINAL,{tot,list}=ranked("coroa",ids);
  $("#coroaList").innerHTML=rows("coroa",ids,open);
  $("#coroaMeta").textContent=ready.coroa?`${fmt(tot)} votos até agora · ${ids.length} na disputa`:(db?"Carregando votos…":"Placar indisponível neste link");
@@ -608,6 +621,7 @@ function renderCoroa(){const ids=alive(),open=now()<FINAL,{tot,list}=ranked("cor
  const quadro=id=>PHOTOS[id]&&PHOTOS[id].retrato?`<figure class="retrato-q">${coroaEm(id)}<img src="${PHOTOS[id].retrato}" alt="${esc(byId[id].name)}"></figure>`
   :`<figure class="retrato-q vazio"><div class="quadro"><span>${id?initials(byId[id].name):"?"}</span></div></figure>`;
  $("#throne").innerHTML=quadro(destaque)+`<div class="placa"><b>${destaque?esc(byId[destaque].name):"A coroa está vaga"}</b><span>${temVoto?`lidera a torcida com ${Math.round(lead.n*100/tot)}% dos votos`:(destaque?"ainda sem votos · vote e coloque sua favorita aqui":"o primeiro voto decide quem senta aqui")}</span></div>`;
+ requestAnimationFrame(alinhaRetrato);
  $("#leaderTxt").textContent=lead&&lead.n?`Coroa: ${byId[lead.id].name} lidera`:"Coroa: ninguém lidera ainda";}
 const HANGER=`<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14a4 4 0 1 1 6 3.5c-1.3.8-2 1.8-2 3.5v1L6 34h36L24 22"/></svg>`;
 function voteCards(w,poll,ids,imgs,open,o){o=o||{};if(Object.keys(imgs).length)ids=ids.filter(id=>imgs[id]);const {tot,list}=ranked(poll,ids),lead=list[0]&&list[0].n?list[0].id:null,c0=counts[poll],r=w.real||{};
