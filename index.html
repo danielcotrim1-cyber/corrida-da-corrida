@@ -828,20 +828,21 @@ function ofereceShare(poll,id){shareAtual={poll,id};let el=document.getElementBy
 const carrega=src=>new Promise((ok,no)=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>ok(i);i.onerror=no;i.src=src});
 async function geraCard(poll,id){const W=1080,H=1920,c=document.createElement("canvas");c.width=W;c.height=H;const x=c.getContext("2d");
  try{await Promise.all(['700 80px Cinzel','600 60px "Cormorant Garamond"','italic 600 60px "Cormorant Garamond"'].map(f=>document.fonts.load(f)))}catch(e){}
- const [dam,logo,foto,cor]=await Promise.all(["assets/damasco.webp","assets/logo.webp",imgDoVoto(poll,id),poll==="coroa"?"assets/coroa.webp?v=2":null].map(s=>s?carrega(s).catch(()=>null):null));
+ const ids=id.split("-").filter(i=>PHOTOS[i]&&PHOTOS[i].retrato);
+ const [dam,logo,...fotos]=await Promise.all(["assets/damasco.webp","assets/logo.webp",...ids.map(i=>PHOTOS[i].retrato)].map(s=>carrega(s).catch(()=>null)));
  x.fillStyle="#2a141d";x.fillRect(0,0,W,H);
  if(dam){x.globalAlpha=.22;const pt=x.createPattern(dam,"repeat");x.fillStyle=pt;x.fillRect(0,0,W,H);x.globalAlpha=1}
  const g=x.createRadialGradient(W/2,H*.45,100,W/2,H*.45,1100);g.addColorStop(0,"rgba(168,56,95,.35)");g.addColorStop(1,"rgba(10,3,6,.85)");x.fillStyle=g;x.fillRect(0,0,W,H);
- if(logo){const lw=380,lh=lw*logo.height/logo.width;x.drawImage(logo,(W-lw)/2,70,lw,lh)}
- let fy=560;
- if(foto){const mh=poll==="coroa"?700:800;let fw=680,fh=fw*foto.height/foto.width;if(fh>mh){fh=mh;fw=fh*foto.width/foto.height}
-  const fx=(W-fw)/2;fy=poll==="coroa"?620:500;
-  x.save();x.shadowColor="rgba(0,0,0,.6)";x.shadowBlur=50;x.shadowOffsetY=20;x.drawImage(foto,fx,fy,fw,fh);x.restore();
-  if(cor&&poll==="coroa"){const cw=fw*.42,ch=cw*cor.height/cor.width;x.drawImage(cor,W/2-cw/2,fy+fh*.08-ch*.85,cw,ch)}
+ if(logo){const lw=340,lh=lw*logo.height/logo.width;x.drawImage(logo,(W-lw)/2,60,lw,lh)}
+ let fy=420;const fs=fotos.filter(Boolean);
+ if(fs.length){const gap=30,maxH=920,maxW=fs.length>1?(W-120-gap)/2:620;
+  let fh=maxH,fw=fh*fs[0].width/fs[0].height;if(fw>maxW){fw=maxW;fh=fw*fs[0].height/fs[0].width}
+  const tot=fs.length*fw+(fs.length-1)*gap;let fx=(W-tot)/2;
+  fs.forEach(f=>{x.save();x.shadowColor="rgba(0,0,0,.6)";x.shadowBlur=50;x.shadowOffsetY=20;x.drawImage(f,fx,fy,fw,fh);x.restore();fx+=fw+gap});
   fy+=fh}
  const ouro=x.createLinearGradient(0,0,0,80);ouro.addColorStop(0,"#fff3c4");ouro.addColorStop(.5,"#f6c75a");ouro.addColorStop(1,"#d99a2f");
  const t=(txt,y,font,fill)=>{x.font=font;x.fillStyle=fill;x.textAlign="center";x.textBaseline="alphabetic";x.fillText(txt,W/2,y)};
- let y=fy+100;
+ let y=fy+90;
  t("EU VOTEI EM",y,'700 46px Cinzel',"#f2c3d3");
  let n=nome(id).toUpperCase(),sz=96;x.font=`700 ${sz}px Cinzel`;while(x.measureText(n).width>W-120&&sz>48){sz-=4;x.font=`700 ${sz}px Cinzel`}
  x.save();x.translate(0,y+sz+20-80);t(n,80,`700 ${sz}px Cinzel`,ouro);x.restore();
