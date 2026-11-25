@@ -336,6 +336,22 @@ section.cast.band{padding-top:0}
 .placa-r img{display:block;width:100%;height:auto}
 :root,:root[data-theme=dark]{color-scheme:light}
 .aba{color:#f4ecdc}.aba.on,.aba.on *{color:#2b1c24!important;-webkit-text-fill-color:#2b1c24!important}.aba.on small{color:#7a1f3d!important;-webkit-text-fill-color:#7a1f3d!important}
+/* galeria 3D do elenco */
+#castGrid[hidden]{display:none}
+.galeria{position:relative;margin:0 calc(-1*max(5vw,16px))}
+.gal-sticky{position:sticky;top:0;height:100vh;display:grid;grid-template-rows:1fr auto auto;overflow:hidden;padding-bottom:18px}
+.gal-palco{position:relative;perspective:1400px;perspective-origin:50% 45%;transform-style:preserve-3d;min-height:0}
+.gal-item{position:absolute;left:50%;top:50%;margin:0;width:clamp(170px,19vw,300px);aspect-ratio:476/800;transform-style:preserve-3d;cursor:pointer;will-change:transform;transition:filter .3s}
+.gal-item img{width:100%;height:100%;object-fit:contain;display:block;filter:drop-shadow(0 18px 24px rgba(0,0,0,.45));user-select:none;-webkit-user-drag:none}
+.gal-info{display:grid;justify-items:center;gap:6px;text-align:center;min-height:118px}
+.gal-info b{font:700 clamp(26px,3.4vw,40px)/1.1 var(--titulo);letter-spacing:.06em;color:#fad376;-webkit-text-fill-color:#fad376;text-transform:uppercase}
+.gal-info svg{width:220px;height:16px}
+.gal-info .ig{font:italic 400 17px var(--serif);color:#cdb6bf;text-decoration:none}
+.gal-nav{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:8px}
+.gal-seta{width:44px;height:44px;border-radius:50%;border:1.5px solid #c9952e;background:rgba(26,11,16,.5);color:#fad376;font-size:26px;line-height:1;cursor:pointer}
+.gal-dica{font:italic 400 15px var(--serif);color:#a88c97}
+@media(max-width:700px){.gal-item{width:min(58vw,250px)}.gal-dica{display:none}.gal-sticky{grid-template-rows:minmax(0,62vh) auto auto;align-content:center}}
+@media(prefers-reduced-motion:reduce){.gal-item{transition:none}}
 </style>
 
 </head>
@@ -432,7 +448,15 @@ section.cast.band{padding-top:0}
     <div class="orn" aria-hidden="true" style="margin:0 auto clamp(32px,4.5vw,72px);max-width:260px"><i></i></div>
     <h2 id="castT">O elenco da temporada 8</h2>
     <p class="meta" style="margin-top:8px">12 participantes, 11 episódios e final ao vivo. Episódios inéditos toda terça, às 20h.</p>
-    <div class="grid" id="castGrid"></div>
+    <div class="grid" id="castGrid" hidden></div>
+  </div>
+  <div class="galeria" id="galeria">
+    <div class="gal-sticky">
+      <div class="gal-palco" id="galPalco" aria-hidden="true"></div>
+      <div class="gal-info" id="galInfo" aria-live="polite"></div>
+      <div class="gal-nav"><button type="button" class="gal-seta" id="galPrev" aria-label="Anterior">‹</button><span class="gal-dica">role a página para girar o elenco</span><button type="button" class="gal-seta" id="galNext" aria-label="Próxima">›</button></div>
+      <ul class="sr"></ul>
+    </div>
   </div>
 </section>
 </main>
@@ -645,6 +669,35 @@ renderCast();renderAll();setInterval(()=>{tick();if(!openWeek())renderWeek()},30
  listen("coroa","coroa","#coroaNote");
  weekUnsub=listen(shownWeek().id,"week","#weekNote");
 })();
+
+/* ===== Galeria 3D do elenco (gira com a rolagem) ===== */
+(function(){const G=document.getElementById("galeria"),palco=document.getElementById("galPalco"),info=document.getElementById("galInfo");if(!G)return;
+ const L=CAST.map(c=>({c,src:(c.st!=="in"&&PEDRA[c.id])?PEDRA[c.id]:(PHOTOS[c.id]&&PHOTOS[c.id].retrato)}));
+ palco.innerHTML=L.map((x,i)=>`<figure class="gal-item${x.c.st!=="in"?" fora":""}" data-i="${i}"><img src="${x.src}" alt="${esc(x.c.name)}" loading="lazy" draggable="false"></figure>`).join("");
+ G.querySelector(".sr").innerHTML=L.map(x=>`<li>${esc(x.c.name)}: ${x.c.st==="in"?"na disputa":esc(x.c.note||"fora")}</li>`).join("");
+ const items=[...palco.children],N=L.length;let pos=0,alvo=0,ultimo=-1,manual=null;
+ G.style.height=`calc(100vh + ${N*38}vh)`;
+ const prog=()=>{const r=G.getBoundingClientRect(),tot=G.offsetHeight-innerHeight;return Math.min(1,Math.max(0,-r.top/tot))};
+ function mostra(i){if(i===ultimo)return;ultimo=i;const c=L[i].c;
+  info.innerHTML=`<b>${esc(c.name)}</b><svg viewBox="0 0 220 16" aria-hidden="true"><path d="M4 8 H96 M124 8 H216" stroke="#c9952e" stroke-width="1.6"/><path d="M96 8 q6-6 12 0 q-6 6-12 0Z M112 8 q6-6 12 0 q-6 6-12 0Z" fill="none" stroke="#c9952e" stroke-width="1.4"/><circle cx="110" cy="8" r="4.5" fill="#d6408b" stroke="#c9952e" stroke-width="1.4"/></svg><a class="ig" href="https://instagram.com/${esc(c.ig)}" rel="noopener">@${esc(c.ig)}</a><span class="tag${c.st==="in"?"":" out"}">${c.st==="in"?"Na disputa":esc(c.note||"Fora")}</span>`;
+  items.forEach((el,k)=>el.classList.toggle("on",k===i))}
+ function quadro(){const w=palco.clientWidth,m=w<700;
+  if(manual===null)alvo=prog()*(N-1);
+  pos+=(alvo-pos)*0.12;if(Math.abs(alvo-pos)<.001)pos=alvo;
+  const passo=m?0.62:0.36,R=m?w*0.95:Math.min(w*0.72,1100);
+  items.forEach((el,k)=>{const d=k-pos,a=d*passo,vis=Math.abs(a)<1.45;
+   el.style.visibility=vis?"visible":"hidden";if(!vis)return;
+   const x=Math.sin(a)*R,z=(1-Math.cos(a))*R*0.75;
+   el.style.transform=`translate(-50%,-50%) translateX(${x}px) translateZ(${z}px) rotateY(${a*-57.3*1.25}deg)`;
+   el.style.zIndex=String(100-Math.round(Math.abs(d)*10));
+   el.style.filter=Math.abs(d)<.5?"none":`brightness(${1-Math.min(.25,Math.abs(d)*.06)})`});
+  mostra(Math.round(Math.min(N-1,Math.max(0,pos))));
+  requestAnimationFrame(quadro)}
+ const pula=di=>{const i=Math.min(N-1,Math.max(0,Math.round(pos)+di)),tot=G.offsetHeight-innerHeight;
+  scrollTo({top:G.getBoundingClientRect().top+scrollY+tot*(i/(N-1)),behavior:"smooth"})};
+ document.getElementById("galPrev").onclick=()=>pula(-1);document.getElementById("galNext").onclick=()=>pula(1);
+ palco.addEventListener("click",e=>{const f=e.target.closest(".gal-item");if(f)pula(+f.dataset.i-Math.round(pos))});
+ requestAnimationFrame(quadro);})();
 }
 
 {const m=document.getElementById("carta"),b=document.getElementById("abrirCarta");let last=null;
