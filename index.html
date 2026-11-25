@@ -439,6 +439,34 @@ section.cast.band{padding-top:0}
 .sm-box small,.sm-load{font:italic 400 17px var(--serif);color:#f2c3d3;-webkit-text-fill-color:#f2c3d3}
 .sm-x{position:absolute;top:-6px;right:-6px;width:40px;height:40px;border-radius:50%;border:1.5px solid #e2b04f;background:#2a141d;color:#f6d27a;font-size:24px;cursor:pointer;z-index:2}
 @media(max-width:600px){.share-bar{font-size:15px;gap:8px;padding-left:14px}.share-bar span{display:none}}
+/* ===== Revisão visual: ouro único, blocos escuros, etiquetas e barras ===== */
+:root{--ouro-metal:linear-gradient(135deg,#6e3f0e 0%,#e8c272 14%,#fff0c0 24%,#b9791f 38%,#f3d382 52%,#8a5414 66%,#f0cd7c 80%,#a96d1c 92%,#f8e2a4 100%);--fundo-bloco:linear-gradient(180deg,rgba(64,22,38,.9),rgba(38,12,22,.94)),url(assets/damasco.webp) 0 0/230px,#341321}
+/* 2. blocos em vinho/ameixa com textura + 1. filete de ouro escovado */
+.board,.panel,.real{background:linear-gradient(180deg,rgba(64,22,38,.9),rgba(38,12,22,.94)) padding-box,url(assets/damasco.webp) 0 0/230px padding-box,var(--ouro-metal) border-box!important;background-color:#341321!important;border:3px solid transparent!important;box-shadow:0 0 0 1px rgba(20,6,12,.8),0 18px 40px rgba(10,3,6,.55),inset 0 0 40px rgba(0,0,0,.35)!important;color:#f4e2e8}
+.board h3,.panel h3{color:#f6d27a!important;-webkit-text-fill-color:#f6d27a!important;text-shadow:0 2px 8px rgba(0,0,0,.45)}
+.pn{color:#e48aaf!important;-webkit-text-fill-color:#e48aaf!important}
+.board>.meta,.panel>.meta{color:#cdb0bc!important;-webkit-text-fill-color:#cdb0bc!important;font-style:normal;font-size:14px;letter-spacing:.06em;text-transform:uppercase;font-family:var(--titulo)}
+.board .note,.panel .note{color:#f2c3d3!important;-webkit-text-fill-color:#f2c3d3!important}
+.ep-video span,.apres figcaption{color:#e6c6d2!important;-webkit-text-fill-color:#e6c6d2!important}
+.outros{border-top-color:rgba(232,194,114,.35)!important}
+.outros h4{color:#f6d27a!important;-webkit-text-fill-color:#f6d27a!important}
+/* ouro único nos elementos com borda */
+.cta,.rel-placa,.aba.on,.outros summary,.sm-down{border:2.5px solid transparent!important;background:linear-gradient(180deg,#fbf3e2,#efdcbc) padding-box,var(--ouro-metal) border-box!important}
+.cta{box-shadow:0 0 0 1px rgba(20,6,12,.6),0 10px 26px rgba(10,3,6,.45)!important;animation:none!important}
+.rel-placa{background:linear-gradient(180deg,#f9e3ea,#efcbd8) padding-box,var(--ouro-metal) border-box!important;box-shadow:0 0 0 1px rgba(20,6,12,.6),0 10px 18px rgba(0,0,0,.35)!important}
+.lk,.row{border:1.5px solid transparent!important;background:linear-gradient(180deg,#f8efdf,#efe2c8) padding-box,linear-gradient(135deg,#c9a35a,#f3dfae 40%,#a8792e 70%,#e9cf90) border-box!important}
+.lk.top,.row.top{border-width:3px!important;background:linear-gradient(180deg,#fbf1dc,#f2dfb8) padding-box,var(--ouro-metal) border-box!important;box-shadow:0 0 22px 3px rgba(246,210,122,.45)!important}
+.txt{background:linear-gradient(180deg,#f8efdf,#efe2c8) padding-box,var(--ouro-metal) border-box!important;border:2px solid transparent!important;box-shadow:none!important}
+/* 3. etiquetas como fita de lacre */
+.tag{background:linear-gradient(180deg,#8e2a50,#5a1530)!important;color:#fff1e0!important;-webkit-text-fill-color:#fff1e0!important;border:1.5px solid #d9ad55!important;border-radius:4px!important;box-shadow:0 2px 6px rgba(43,12,24,.35),inset 0 1px 0 rgba(255,255,255,.18);font:700 11px/1 var(--titulo)!important;letter-spacing:.12em!important;padding:6px 10px 5px!important}
+.tag.out{background:linear-gradient(180deg,#4a3a40,#2b1c24)!important;border-color:#9c8a74!important;color:#e9dccf!important;-webkit-text-fill-color:#e9dccf!important}
+/* barras de progresso em ouro */
+.bar{height:12px!important;border-radius:99px;background:linear-gradient(180deg,#e6d6bd,#f3e8d4)!important;box-shadow:inset 0 1px 3px rgba(43,28,36,.3),0 0 0 1px rgba(168,121,46,.35)!important}
+.bar i{background:linear-gradient(180deg,#f8e2a4,#d9a441 55%,#a96d1c)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+.row.top .bar i,.lk.top .bar i{background:linear-gradient(180deg,#fff3c4,#f0c35a 50%,#b8741c)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 0 10px rgba(246,210,122,.8)}
+.lk,.row,.txt{color:#2b1c24}.lk .nm,.row .nm,.lk .ln,.lk .ln b,.row .num,.txt{color:#2b1c24;-webkit-text-fill-color:#2b1c24}
+.vote{-webkit-text-fill-color:currentColor!important}
+.lk .meta,.row .num small{color:#6b4a55!important;-webkit-text-fill-color:#6b4a55!important}
 </style>
 
 </head>
