@@ -320,6 +320,19 @@ section.cast.band{padding-top:0}
 .outros summary{background:#fbf3e2!important}
 .outros h4{color:#7a1f3d!important;-webkit-text-fill-color:#7a1f3d!important;background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;text-shadow:none!important}
 .aba,.aba small{-webkit-text-fill-color:currentColor!important;background-clip:border-box!important;-webkit-background-clip:border-box!important;text-shadow:none!important}
+/* destaque: look dos apresentadores */
+.apres{margin:4px auto 30px;display:grid;justify-items:center;gap:6px;max-width:560px;position:relative}
+.placa-r{position:relative;width:min(100%,440px);z-index:2;filter:drop-shadow(0 6px 10px rgba(43,12,24,.35));animation:placaBalanca 5s ease-in-out infinite;transform-origin:50% 0}
+.placa-r svg{display:block;width:100%;height:auto}
+.placa-r span{position:absolute;inset:0;display:grid;place-items:center;font:700 clamp(17px,2.6vw,24px)/1 var(--titulo);letter-spacing:.12em;text-transform:uppercase;color:#5a1530;-webkit-text-fill-color:#5a1530;background:none;text-shadow:0 1px 0 rgba(255,255,255,.6)}
+.apres-img{position:relative;width:min(92%,460px);margin-top:-6px}
+.apres-img img{display:block;width:100%;height:auto;transform-origin:50% 100%;animation:apresFlutua 6s ease-in-out infinite;filter:drop-shadow(0 18px 22px rgba(43,12,24,.4)) drop-shadow(0 0 22px rgba(250,211,118,.35))}
+.apres-img i{position:absolute;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle,#fff 0 20%,rgba(255,236,190,.9) 35%,transparent 70%);opacity:0;animation:brilho 3s ease-in-out infinite}
+.apres-img i:nth-of-type(1){left:22%;top:10%}.apres-img i:nth-of-type(2){left:62%;top:22%;animation-delay:1s}.apres-img i:nth-of-type(3){left:80%;top:70%;animation-delay:2s}
+.apres figcaption{font:italic 400 17px var(--serif);color:#5b3a46;text-align:center}
+@keyframes apresFlutua{0%,100%{transform:translateY(0) rotate(-1.2deg)}50%{transform:translateY(-12px) rotate(1.2deg)}}
+@keyframes placaBalanca{0%,100%{transform:rotate(-1.5deg)}50%{transform:rotate(1.5deg)}}
+@media(prefers-reduced-motion:reduce){.placa-r,.apres-img img,.apres-img i{animation:none}}
 </style>
 
 </head>
@@ -484,6 +497,7 @@ const WEEKS=[
   provas:{gabriel:"assets/provas/s5-gabriel-sttefone.webp",sttefone:"assets/provas/s5-gabriel-sttefone.webp",latyffa:"assets/provas/s5-latyffa-jheny.webp",jheny:"assets/provas/s5-latyffa-jheny.webp",matthel:"assets/provas/s5-matthel-aysha.webp",aysha:"assets/provas/s5-matthel-aysha.webp",talitah:"assets/provas/s5-talitah-barbara.webp",barbara:"assets/provas/s5-talitah-barbara.webp"},
   flopFone:false, /* resultado do Flop em foto, não em celular */
   flops:{aysha:"assets/flop/s5-aysha.webp",barbara:"assets/flop/s5-barbara.webp",matthel:"assets/flop/s5-matthel.webp",talitah:"assets/flop/s5-talitah.webp"},
+  lookApres:"assets/looks/s5-apresentadores.webp", /* look de Edu e Fih: destaque fora da votação */
   looks:{aysha:"assets/looks/s5-aysha.webp?v=2",barbara:"assets/looks/s5-barbara.webp?v=2",gabriel:"assets/looks/s5-gabriel.webp?v=2",jheny:"assets/looks/s5-jheny.webp?v=2",latyffa:"assets/looks/s5-latyffa.webp?v=2",matthel:"assets/looks/s5-matthel.webp?v=2",sttefone:"assets/looks/s5-sttefone.webp?v=2",talitah:"assets/looks/s5-talitah.webp?v=2"}}
 ];
 const POLLS=[
@@ -536,6 +550,14 @@ const CAMERA=`<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-
 function provaCards(w,flop){const P=(flop?w.flops:w.provas)||{},r=w.real||{};
  return (flop?w.cast.filter(id=>P[id]):w.cast).map(id=>{const c=byId[id],tag=flop?`<span class="tag out">No Flop</span>`:r.prova===id?`<span class="tag">Venceu a prova</span>`:r.elim===id?`<span class="tag out">Eliminada</span>`:"";
   return `<li class="lk pv${flop?" fone":""}${!flop&&r.prova===id?" top":""}"><div class="ph">${P[id]?`<img src="${P[id]}" alt="${flop?"Prova do Flop":"Resultado da prova"} de ${esc(c.name)}" loading="lazy">`:`<div>${CAMERA}Foto da prova</div>`}</div><div class="nm">${esc(c.name)}</div>${tag}</li>`}).join("")}
+function apres(w){if(!w.lookApres)return"";
+ return `<figure class="apres"><div class="placa-r" aria-hidden="false"><svg viewBox="0 0 520 120" aria-hidden="true"><defs><linearGradient id="gPl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3c4"/><stop offset=".45" stop-color="#e2b04f"/><stop offset=".55" stop-color="#b8741c"/><stop offset="1" stop-color="#f6d27a"/></linearGradient><linearGradient id="gPp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbf3e2"/><stop offset="1" stop-color="#efdcbc"/></linearGradient></defs>
+  <path d="M70 18 H450 q22 0 30 -12 q8 22 -6 34 q30 8 30 20 q0 12 -30 20 q14 12 6 34 q-8 -12 -30 -12 H70 q-22 0 -30 12 q-8 -22 6 -34 q-30 -8 -30 -20 q0 -12 30 -20 q-14 -12 -6 -34 q8 12 30 12Z" fill="url(#gPp)" stroke="url(#gPl)" stroke-width="5"/>
+  <path d="M82 30 H438 M82 90 H438" stroke="url(#gPl)" stroke-width="2" fill="none"/>
+  <g fill="none" stroke="url(#gPl)" stroke-width="3.5" stroke-linecap="round"><path d="M260 4 q-14 -2 -18 8 q10 -2 18 6 q8 -8 18 -6 q-4 -10 -18 -8Z"/><path d="M260 116 q-14 2 -18 -8 q10 2 18 -6 q8 8 18 6 q-4 10 -18 8Z"/><path d="M14 60 q-8 -10 2 -18 M14 60 q-8 10 2 18 M506 60 q8 -10 -2 -18 M506 60 q8 10 -2 18"/></g>
+  <circle cx="260" cy="10" r="4" fill="#d58aa6"/><circle cx="260" cy="110" r="4" fill="#d58aa6"/></svg><span>Look Diva Depressão</span></div>
+  <div class="apres-img"><img src="${w.lookApres}" alt="Look dos apresentadores Edu e Fih, do Diva Depressão, no ep. ${w.ep}" loading="lazy"><i></i><i></i><i></i></div>
+  <figcaption>Edu e Fih, os apresentadores · fora da votação</figcaption></figure>`}
 function outrosLooks(w){const ant=WEEKS.filter(x=>x.id!==w.id&&x.looks&&Object.keys(x.looks).length&&now()>=+new Date(x.opens)).reverse();
  if(!ant.length)return"";
  return `<details class="outros"><summary>Looks das outras semanas</summary>${ant.map(x=>`<h4>Ep. ${x.ep} · ${esc(x.title)}</h4><ul class="looks mini">${abc(Object.keys(x.looks).filter(id=>byId[id])).map(id=>`<li class="lk"><div class="ph"><img src="${x.looks[id]}" alt="Look de ${esc(byId[id].name)} no ep. ${x.ep}" loading="lazy"></div><div class="nm">${esc(byId[id].name)}</div></li>`).join("")}</ul>`).join("")}</details>`}
@@ -556,7 +578,7 @@ function renderWeek(){const w=shownWeek(),open=!!openWeek()&&openWeek().id===w.i
    :p.k==="flop"?(w.duplas?`<ol class="rank">${rows("flop",ids,open)}</ol>`:`<ol class="looks">${voteCards(w,"flop",ids,P,open,{real:1,alt:"Resultado da prova",icon:CAMERA,ph:"Foto da prova"})}</ol>`)
    :p.k==="elim"&&w.flopVideo?txt(R.flop)+`<div class="flopv"><div class="iphone"><video src="${w.flopVideo.src}" poster="${w.flopVideo.poster}" autoplay muted loop playsinline preload="metadata" aria-label="Vídeo da prova do Flop"></video><button type="button" class="som" aria-label="Ativar som">🔇</button></div><ol class="rank">${rows("elim",ids,open)}</ol></div>`
    :p.k==="elim"?txt(R.flop)+`<ol class="looks">${voteCards(w,"elim",ids,F,open,{fone:Object.keys(F).length>0&&w.flopFone!==false,alt:"Prova do Flop",icon:CAMERA,ph:"Foto da prova do Flop"})}</ol>`
-   :`<ol class="looks">${voteCards(w,"look",ids,w.looks||{},open,{alt:"Look",icon:HANGER,ph:"Foto do look"})}</ol>${outrosLooks(w)}`;
+   :apres(w)+`<ol class="looks">${voteCards(w,"look",ids,w.looks||{},open,{alt:"Look",icon:HANGER,ph:"Foto do look"})}</ol>${outrosLooks(w)}`;
   const nx=POLLS[i+1],cta=nx?`<a class="cta cta-in" href="#p-${nx.k}"><small>Próxima votação · ${i+2} de ${POLLS.length}</small><b>${nx.k==="prova"&&w.duplas?"Qual dupla merecia ganhar a prova?":nx.q}</b><span>Continue julgando ↓</span></a>`
    :`<a class="cta cta-in" href="#coroa"><small>Você julgou a semana toda!</small><b>Volte e vote na winner</b><span>Quem leva a Coroa de Cola Quente? ↑</span></a>`;
   return `<article class="panel" id="p-${p.k}" aria-labelledby="q-${p.k}"><div class="pn">${i+1} de ${POLLS.length}</div><h3 id="q-${p.k}">${p.k==="prova"&&w.duplas?"Qual dupla merecia ganhar a prova?":p.q}</h3><p class="meta">${meta}</p>${body}${open?cta:""}</article>`}).join("");
