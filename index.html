@@ -474,7 +474,7 @@ const WEEKS=[
  {id:"s5",ep:5,title:"Publi Secrets: Black Friday",sub:"Live de Black Friday do TikTok Shop, apresentada em dupla no palco.",
   opens:"2026-11-24T20:00:00-03:00",closes:"2026-12-01T20:00:00-03:00",
   cast:["aysha","barbara","gabriel","jheny","latyffa","matthel","sttefone","talitah"],
-  real:{},
+  real:{prova:"latyffa-jheny"},
   resumo:{prova:"Publi Secrets edição Black Friday: em duplas, as participantes apresentaram no palco uma live de Black Friday do TikTok Shop, com 5 produtos por dupla. O briefing exigia citar dois diferenciais de cada produto, dizer a duração da campanha (24/11 a 03/12), usar o slogan “Se é trend, tá no TikTok Shop” e reforçar as condições especiais, como frete grátis e 12x sem juros, sem ignorar o público. Foram 50 minutos de preparação e 5 de apresentação, avaliados por respeito ao briefing, desenvoltura e criatividade."},
   duplas:[["gabriel","sttefone"],["latyffa","jheny"],["matthel","aysha"],["talitah","barbara"]], /* prova em dupla: vota na dupla */
   provas:{gabriel:"assets/provas/s5-gabriel-sttefone.webp",sttefone:"assets/provas/s5-gabriel-sttefone.webp",latyffa:"assets/provas/s5-latyffa-jheny.webp",jheny:"assets/provas/s5-latyffa-jheny.webp",matthel:"assets/provas/s5-matthel-aysha.webp",aysha:"assets/provas/s5-matthel-aysha.webp",talitah:"assets/provas/s5-talitah-barbara.webp",barbara:"assets/provas/s5-talitah-barbara.webp"},
@@ -525,7 +525,7 @@ function renderCoroa(){const ids=alive(),open=now()<FINAL,{tot,list}=ranked("cor
 const HANGER=`<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14a4 4 0 1 1 6 3.5c-1.3.8-2 1.8-2 3.5v1L6 34h36L24 22"/></svg>`;
 function voteCards(w,poll,ids,imgs,open,o){o=o||{};if(Object.keys(imgs).length)ids=ids.filter(id=>imgs[id]);const {tot,list}=ranked(poll,ids),lead=list[0]&&list[0].n?list[0].id:null,c0=counts[poll],r=w.real||{};
  return abc(ids).map(id=>{const n=c0[id]||0,p=tot?Math.round(n*100/tot):0,c={name:nome(id)},dupla=id.includes("-")&&!byId[id];
-  const tag=dupla?(id.split("-").includes(r.prova)?`<span class="tag">Venceu a prova</span>`:""):o.fone?`<span class="tag out">No Flop</span>`:o.real?(r.prova===id?`<span class="tag">Venceu a prova</span>`:r.elim===id?`<span class="tag out">Eliminada</span>`:""):"";
+  const tag=dupla?((id===r.prova||id.split("-").includes(r.prova))?`<span class="tag">Venceu a prova</span>`:""):o.fone?`<span class="tag out">No Flop</span>`:o.real?(r.prova===id?`<span class="tag">Venceu a prova</span>`:r.elim===id?`<span class="tag out">Eliminada</span>`:""):"";
   return `<li class="lk${o.fone?" fone":""}${imgs[id]?"":" semfoto"}${id===lead?" top":""}">${imgs[id]?`<div class="ph"><img src="${imgs[id]}" alt="${o.alt} de ${esc(c.name)}" loading="lazy"></div>`:""}<div class="nm">${esc(c.name)}</div>${tag}<div class="bar"><i style="width:${p}%"></i></div><div class="ln"><b>${p}%</b><span class="meta" style="margin:0">${fmt(n)} voto${n===1?"":"s"}</span></div><button type="button" class="vote" data-poll="${poll}" data-id="${id}" ${open&&canVote&&db?"":"disabled"} aria-label="Votar em ${esc(c.name)}">Votar</button></li>`}).join("")}
 const CAMERA=`<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16h8l3-5h14l3 5h8v22H6z"/><circle cx="24" cy="26" r="7"/></svg>`;
 function provaCards(w,flop){const P=(flop?w.flops:w.provas)||{},r=w.real||{};
@@ -548,7 +548,7 @@ function renderWeek(){const w=shownWeek(),open=!!openWeek()&&openWeek().id===w.i
   const P=w.provas||{},F=w.flops||{},txt=t=>t?`<p class="txt">${esc(t)}</p>`:"",R=w.resumo||{};
   const D=p.k==="prova"&&w.duplas?w.duplas.map(d=>d.join("-")):null,DP=D?Object.fromEntries(D.map(k=>[k,P[k.split("-")[0]]])):null;
   const body=p.k==="prova"?txt(R.prova)+`<ol class="looks">${voteCards(w,"prova",D||ids,DP||P,open,{real:1,alt:"Resultado da prova",icon:CAMERA,ph:"Foto da prova"})}</ol>`
-   :p.k==="flop"?`<ol class="looks">${voteCards(w,"flop",ids,P,open,{real:1,alt:"Resultado da prova",icon:CAMERA,ph:"Foto da prova"})}</ol>`
+   :p.k==="flop"?(w.duplas?`<ol class="rank">${rows("flop",ids,open)}</ol>`:`<ol class="looks">${voteCards(w,"flop",ids,P,open,{real:1,alt:"Resultado da prova",icon:CAMERA,ph:"Foto da prova"})}</ol>`)
    :p.k==="elim"&&w.flopVideo?txt(R.flop)+`<div class="flopv"><div class="iphone"><video src="${w.flopVideo.src}" poster="${w.flopVideo.poster}" autoplay muted loop playsinline preload="metadata" aria-label="Vídeo da prova do Flop"></video><button type="button" class="som" aria-label="Ativar som">🔇</button></div><ol class="rank">${rows("elim",ids,open)}</ol></div>`
    :p.k==="elim"?txt(R.flop)+`<ol class="looks">${voteCards(w,"elim",ids,F,open,{fone:Object.keys(F).length>0,alt:"Prova do Flop",icon:CAMERA,ph:"Foto da prova do Flop"})}</ol>`
    :`<ol class="looks">${voteCards(w,"look",ids,w.looks||{},open,{alt:"Look",icon:HANGER,ph:"Foto do look"})}</ol>${outrosLooks(w)}`;
@@ -556,7 +556,7 @@ function renderWeek(){const w=shownWeek(),open=!!openWeek()&&openWeek().id===w.i
    :`<a class="cta cta-in" href="#coroa"><small>Você julgou a semana toda!</small><b>Volte e vote na winner</b><span>Quem leva a Coroa de Cola Quente? ↑</span></a>`;
   return `<article class="panel" id="p-${p.k}" aria-labelledby="q-${p.k}"><div class="pn">${i+1} de ${POLLS.length}</div><h3 id="q-${p.k}">${p.k==="prova"&&w.duplas?"Qual dupla merecia ganhar a prova?":p.q}</h3><p class="meta">${meta}</p>${body}${open?cta:""}</article>`}).join("");
  renderAbas(w);
- const r=w.real||{},item=(lbl,id)=>`<div><dt>${lbl}</dt><dd>${id?esc(byId[id].name):"a confirmar"}</dd></div>`;
+ const r=w.real||{},item=(lbl,id)=>`<div><dt>${lbl}</dt><dd>${id?esc(nome(id)):"a confirmar"}</dd></div>`;
  $("#real").innerHTML=`<h3>E no programa?</h3><dl>${item("Venceu a prova",r.prova)}${item("Foi eliminada",r.elim)}${r.flop?item("Foi pro Flop",r.flop):""}</dl>`;
  tick();}
 function tick(){const w=openWeek();
