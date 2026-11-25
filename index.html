@@ -391,6 +391,7 @@ section.cast.band{padding-top:0}
 .polls{display:grid;gap:clamp(56px,7vw,96px)!important}.polls>.panel{margin:0!important}
 .real{margin-bottom:clamp(44px,5vw,64px)!important}
 #semana .wrap,#coroa .wrap{padding-left:clamp(10px,2vw,24px);padding-right:clamp(10px,2vw,24px)}
+.real dd .prox{display:block;font:italic 400 15px var(--serif);color:#e6c6d2;-webkit-text-fill-color:#e6c6d2;margin-top:2px}
 </style>
 
 </head>
@@ -646,8 +647,9 @@ function renderWeek(){const w=shownWeek(),open=!!openWeek()&&openWeek().id===w.i
    :`<a class="cta cta-in" href="#coroa"><small>Você julgou a semana toda!</small><b>Volte e vote na winner</b><span>Quem leva a Coroa de Cola Quente? ↑</span></a>`;
   return `<article class="panel" id="p-${p.k}" aria-labelledby="q-${p.k}"><div class="pn">${i+1} de ${POLLS.length}</div><h3 id="q-${p.k}">${p.k==="prova"&&w.duplas?"Qual dupla merecia ganhar a prova?":p.q}</h3><p class="meta">${meta}</p>${body}${open?cta:""}</article>`}).join("");
  renderAbas(w);
- const r=w.real||{},item=(lbl,id)=>`<div><dt>${lbl}</dt><dd>${id?esc(nome(id)):"a confirmar"}</dd></div>`;
- $("#real").innerHTML=`<h3>E no programa?</h3><dl>${item("Venceu a prova",r.prova)}${item("Foi eliminada",r.elim)}${r.flop?item("Foi pro Flop",r.flop):""}</dl>`;
+ const r=w.real||{},prox=new Date(w.closes).toLocaleDateString("pt-BR",{day:"numeric",month:"long",timeZone:"America/Sao_Paulo"}),
+  item=(lbl,id,pend)=>`<div><dt>${lbl}</dt><dd>${id?esc(nome(id)):(pend||"a confirmar")}</dd></div>`;
+ $("#real").innerHTML=`<h3>E no programa?</h3><dl>${item("Venceu a prova",r.prova)}${item("Foi eliminada",r.elim,`resultado no episódio da próxima semana <small class="prox">terça, ${prox}, às 20h</small>`)}${r.flop?item("Foi pro Flop",r.flop):""}</dl>`;
  tick();}
 function tick(){const w=openWeek();
  const fim=selWeek?null:(w?+new Date(w.closes):null),ms=fim?Math.max(0,fim-now()):0;
