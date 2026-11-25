@@ -400,6 +400,10 @@ section.cast.band{padding-top:0}
  .retrato-q>img{height:var(--rq-h,auto);width:auto;max-width:100%;margin:0 auto}
  .retrato-q{width:auto!important;display:flex;justify-content:center}
 }
+.ep-video{display:grid;justify-items:center;gap:8px;margin:6px auto 26px;max-width:760px;text-decoration:none}
+.ep-video img{display:block;width:100%;height:auto;filter:drop-shadow(0 12px 20px rgba(43,12,24,.4));transition:transform .25s,filter .25s}
+.ep-video:hover img{transform:scale(1.015);filter:drop-shadow(0 16px 26px rgba(43,12,24,.5)) drop-shadow(0 0 18px rgba(250,211,118,.45))}
+.ep-video span{font:italic 400 17px var(--serif);color:#7a1f3d;-webkit-text-fill-color:#7a1f3d}
 </style>
 
 </head>
@@ -569,6 +573,7 @@ const WEEKS=[
   real:{prova:"latyffa-jheny"},
   resumo:{prova:"Publi Secrets edição Black Friday: em duplas, as participantes apresentaram no palco uma live de Black Friday do TikTok Shop, com 5 produtos por dupla. O briefing exigia citar dois diferenciais de cada produto, dizer a duração da campanha (24/11 a 03/12), usar o slogan “Se é trend, tá no TikTok Shop” e reforçar frete grátis e 12x sem juros, sem ignorar o público. Foram 50 minutos de preparação e 5 de apresentação. As duplas foram Gabriel e Sttefone, Latyffa e Jheny, Matthel e Aysha, e Talitah e Bárbara. Jheny e Latyffa venceram a prova, e Matthel levou o mini desafio do episódio.",
    flop:"Quatro participantes foram pro Flop: Aysha Pink, Bárbara, Matthel e Talitah Sampaio. A prova do Flop foi tirar uma foto com pedrarias, e cada uma produziu a sua com garrafas de Smirnoff Ice. Quem sai é revelado no começo do próximo episódio. No começo deste episódio saiu o resultado do Flop anterior: Breia foi eliminada."},
+  video:{url:"https://youtu.be/qA2iuy0xTTU",img:"assets/provas/s5-video.webp"}, /* capa clicável do episódio */
   duplas:[["gabriel","sttefone"],["latyffa","jheny"],["matthel","aysha"],["talitah","barbara"]], /* prova em dupla: vota na dupla */
   provas:{gabriel:"assets/provas/s5-gabriel-sttefone.webp",sttefone:"assets/provas/s5-gabriel-sttefone.webp",latyffa:"assets/provas/s5-latyffa-jheny.webp",jheny:"assets/provas/s5-latyffa-jheny.webp",matthel:"assets/provas/s5-matthel-aysha.webp",aysha:"assets/provas/s5-matthel-aysha.webp",talitah:"assets/provas/s5-talitah-barbara.webp",barbara:"assets/provas/s5-talitah-barbara.webp"},
   flopFone:false, /* resultado do Flop em foto, não em celular */
@@ -652,7 +657,8 @@ function renderWeek(){const w=shownWeek(),open=!!openWeek()&&openWeek().id===w.i
   const meta=ready.week?`${fmt(tot)} votos nesta pergunta`:(db?"Carregando votos…":"Placar indisponível neste link");
   const P=w.provas||{},F=w.flops||{},txt=t=>t?`<p class="txt">${esc(t)}</p>`:"",R=w.resumo||{};
   const D=p.k==="prova"&&w.duplas?w.duplas.map(d=>d.join("-")):null,DP=D?Object.fromEntries(D.map(k=>[k,P[k.split("-")[0]]])):null;
-  const body=p.k==="prova"?txt(R.prova)+`<ol class="looks">${voteCards(w,"prova",D||ids,DP||P,open,{real:1,alt:"Resultado da prova",icon:CAMERA,ph:"Foto da prova"})}</ol>`
+  const vid=w.video?`<a class="ep-video" href="${w.video.url}" target="_blank" rel="noopener" aria-label="Assistir ao episódio ${w.ep} no YouTube"><img src="${w.video.img}" alt="Episódio ${w.ep}: ${esc(w.title)}" loading="lazy"><span>Assistir ao episódio no YouTube ↗</span></a>`:"";
+  const body=p.k==="prova"?txt(R.prova)+vid+`<ol class="looks">${voteCards(w,"prova",D||ids,DP||P,open,{real:1,alt:"Resultado da prova",icon:CAMERA,ph:"Foto da prova"})}</ol>`
    :p.k==="flop"?(w.duplas?`<ol class="rank">${rows("flop",ids,open)}</ol>`:`<ol class="looks">${voteCards(w,"flop",ids,P,open,{real:1,alt:"Resultado da prova",icon:CAMERA,ph:"Foto da prova"})}</ol>`)
    :p.k==="elim"&&w.flopVideo?txt(R.flop)+`<div class="flopv"><div class="iphone"><video src="${w.flopVideo.src}" poster="${w.flopVideo.poster}" autoplay muted loop playsinline preload="metadata" aria-label="Vídeo da prova do Flop"></video><button type="button" class="som" aria-label="Ativar som">🔇</button></div><ol class="rank">${rows("elim",ids,open)}</ol></div>`
    :p.k==="elim"?txt(R.flop)+`<ol class="looks">${voteCards(w,"elim",ids,F,open,{fone:Object.keys(F).length>0&&w.flopFone!==false,alt:"Prova do Flop",icon:CAMERA,ph:"Foto da prova do Flop"})}</ol>`
