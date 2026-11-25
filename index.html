@@ -14,7 +14,7 @@
    COLOUR and TYPE: ameixa profunda, papel, vinho, rosa e menta, escala de ouro; Almendra Display + Cinzel + Cormorant Garamond + Pinyon Script + Poppins
    LAYOUT: aviso de fã, salão da Coroa no topo, semana em papel, elenco em rosado, rodapé noite
    Identidade adaptada do site oficial da temporada (paleta e tipos), mantendo nome, logo e aviso próprios de site de fã. */
-:root{color-scheme:light dark;
+:root{color-scheme:light;
 --papel:light-dark(#f4ecdc,#1a0b10);--papel2:light-dark(#e8d2c4,#22111a);--cartao:light-dark(#fffaf0,#2a1520);
 --tinta:light-dark(#2b1c24,#f4ecdc);--tinta2:light-dark(#7a6570,#c9b3bc);
 --ameixa:#1f1017;--ameixa2:#1a0b10;--noite:#120a07;
@@ -131,7 +131,7 @@ footer b{font-family:var(--titulo);font-weight:400;font-size:18px;color:var(--o6
 /* ===== Texturas e botões gerados no Magnific (Nano Banana 2.1) ===== */
 :root{--tex-papel:url(assets/papel.webp)}
 :root[data-theme=dark]{--tex-papel:none}
-@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--tex-papel:none}}
+
 body{background-image:var(--tex-papel);background-size:256px}
 .panel,.board,.cc,.lk{background-image:var(--tex-papel);background-size:256px}
 .coroa{background:linear-gradient(180deg,rgba(26,11,16,.55),rgba(26,11,16,.35) 40%,rgba(26,11,16,.7)),radial-gradient(ellipse at 25% 20%,rgba(168,56,95,.4),transparent 55%),radial-gradient(ellipse at 90% 100%,rgba(20,58,49,.55),transparent 50%),url(assets/damasco.webp) 0 0/256px repeat,var(--ameixa2)}
@@ -334,6 +334,8 @@ section.cast.band{padding-top:0}
 @keyframes placaBalanca{0%,100%{transform:rotate(-1.5deg)}50%{transform:rotate(1.5deg)}}
 @media(prefers-reduced-motion:reduce){.placa-r,.apres-img img,.apres-img i{animation:none}}
 .placa-r img{display:block;width:100%;height:auto}
+:root,:root[data-theme=dark]{color-scheme:light}
+.aba{color:#f4ecdc}.aba.on,.aba.on *{color:#2b1c24!important;-webkit-text-fill-color:#2b1c24!important}.aba.on small{color:#7a1f3d!important;-webkit-text-fill-color:#7a1f3d!important}
 </style>
 
 </head>
