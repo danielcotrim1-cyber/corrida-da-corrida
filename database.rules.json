@@ -9,10 +9,16 @@
         "$poll": {
           ".validate": "($w === 'coroa' && $poll === 'coroa') || ($w !== 'coroa' && ($poll === 'prova' || $poll === 'flop' || $poll === 'elim' || $poll === 'look'))",
           "$id": {
-            ".write": "$id.matches(/^[a-z0-9-]{2,24}$/)",
+            ".write": "auth != null && $id.matches(/^[a-z0-9-]{2,24}$/) && newData.parent().parent().parent().parent().child('limits').child(auth.uid).val() === now && (!root.child('limits').child(auth.uid).exists() || root.child('limits').child(auth.uid).val() < now - 1000)",
             ".validate": "newData.isNumber() && ((!data.exists() && newData.val() === 1) || (data.exists() && newData.val() === data.val() + 1))"
           }
         }
+      }
+    },
+    "limits": {
+      "$uid": {
+        ".write": "auth != null && auth.uid === $uid",
+        ".validate": "newData.isNumber() && newData.val() === now"
       }
     }
   }

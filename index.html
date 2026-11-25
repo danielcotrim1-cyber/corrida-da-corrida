@@ -5,6 +5,19 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#1f1017">
 <title>Corrida da Corrida</title>
+<meta name="description" content="Vote na winner e julgue as provas de cada semana da Corrida das Blogueiras 8. Voto livre, sem login. Site de fã.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Corrida da Corrida">
+<meta property="og:title" content="Corrida da Corrida · vote na winner">
+<meta property="og:description" content="Escolha quem leva a Coroa de Cola Quente e julgue as provas de cada semana. Voto livre, sem login.">
+<meta property="og:url" content="https://danielcotrim1-cyber.github.io/corrida-da-corrida/">
+<meta property="og:image" content="https://danielcotrim1-cyber.github.io/corrida-da-corrida/assets/og.jpg">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:locale" content="pt_BR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Corrida da Corrida · vote na winner">
+<meta name="twitter:description" content="Escolha quem leva a Coroa de Cola Quente e julgue as provas de cada semana.">
+<meta name="twitter:image" content="https://danielcotrim1-cyber.github.io/corrida-da-corrida/assets/og.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
 <style>
@@ -409,6 +422,23 @@ section.cast.band{padding-top:0}
 .panel>ol.looks>li,.outros .looks.mini>li{flex:0 1 210px;min-width:0}
 #p-look>ol.looks{max-width:calc(4*210px + 3*18px);margin-left:auto;margin-right:auto}
 @media(max-width:600px){.panel>ol.looks,.outros .looks.mini{gap:10px}.panel>ol.looks>li,.outros .looks.mini>li{flex:0 1 calc(50% - 5px)}#p-look>ol.looks{max-width:none}}
+/* compartilhar voto */
+.share-bar{position:fixed;left:50%;bottom:18px;transform:translate(-50%,140%);z-index:60;display:flex;align-items:center;gap:12px;padding:10px 12px 10px 20px;border-radius:999px;background:linear-gradient(180deg,#fbf3e2,#efdcbc);box-shadow:0 0 0 2px #e2b04f,0 0 0 4px #7a4509,0 14px 30px rgba(0,0,0,.45);color:#2b1c24;font:500 17px var(--serif);transition:transform .35s cubic-bezier(.2,1.4,.4,1);max-width:calc(100vw - 24px)}
+.share-bar.on{transform:translate(-50%,0)}
+.share-bar b{color:#7a1f3d;-webkit-text-fill-color:#7a1f3d}
+.share-bar .sb-go{border:0;border-radius:999px;padding:10px 18px;background:linear-gradient(180deg,#9b2d55,#5a1530);color:#fff3e6;-webkit-text-fill-color:#fff3e6;font:700 13px var(--titulo);letter-spacing:.08em;text-transform:uppercase;cursor:pointer;white-space:nowrap}
+.share-bar .sb-x{border:0;background:none;font-size:22px;color:#7a1f3d;cursor:pointer;padding:0 6px}
+.share-modal{position:fixed;inset:0;z-index:70;background:rgba(15,5,10,.82);display:grid;place-items:center;padding:16px}
+.share-modal[hidden]{display:none}
+.sm-box{position:relative;display:grid;justify-items:center;gap:14px;max-height:100%;}
+.sm-box img{max-height:72vh;max-width:min(88vw,420px);border-radius:16px;box-shadow:0 0 0 2px #e2b04f,0 20px 50px rgba(0,0,0,.6)}
+.sm-acoes{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.sm-share,.sm-down{border:0;border-radius:999px;padding:13px 24px;font:700 14px var(--titulo);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;cursor:pointer}
+.sm-share{background:linear-gradient(180deg,#9b2d55,#5a1530);color:#fff3e6;-webkit-text-fill-color:#fff3e6}
+.sm-down{background:linear-gradient(180deg,#fbf3e2,#efdcbc);color:#2b1c24;-webkit-text-fill-color:#2b1c24;box-shadow:0 0 0 2px #e2b04f}
+.sm-box small,.sm-load{font:italic 400 17px var(--serif);color:#f2c3d3;-webkit-text-fill-color:#f2c3d3}
+.sm-x{position:absolute;top:-6px;right:-6px;width:40px;height:40px;border-radius:50%;border:1.5px solid #e2b04f;background:#2a141d;color:#f6d27a;font-size:24px;cursor:pointer;z-index:2}
+@media(max-width:600px){.share-bar{font-size:15px;gap:8px;padding-left:14px}.share-bar span{display:none}}
 </style>
 
 </head>
@@ -696,12 +726,15 @@ function note(sel,t,warn){const el=$(sel);el.hidden=!t;el.textContent=t||"";el.c
 /* Duas urnas, mesmo site:
    - dentro do Claude (link do artifact): banco do próprio artifact
    - no GitHub Pages: Firebase Realtime Database, com a config abaixo preenchida */
+let ultVoto=0;
 async function vote(poll,id,btn){
  const w=poll==="coroa"?"coroa":(openWeek()||{}).id;if(!db||!canVote||!w)return;
+ if(now()-ultVoto<1200){toast("Calma, torcida! Um voto por vez: espera um segundinho.");return}ultVoto=now();
  btn.disabled=true;
  try{await db.vote(w,poll,id);
   const s=document.createElement("span");s.className="plus";s.textContent="+1";
-  const b=document.querySelector(`.vote[data-poll="${poll}"][data-id="${id}"]`);if(b){b.appendChild(s);setTimeout(()=>s.remove(),900)}}
+  const b=document.querySelector(`.vote[data-poll="${poll}"][data-id="${id}"]`);if(b){b.appendChild(s);setTimeout(()=>s.remove(),900)}
+  ofereceShare(poll,id)}
  catch(e){const c=e&&e.code;
   if(c==="invalid_argument"){canVote=false;renderAll();note("#coroaNote","Este link está em modo só leitura pra você: dá pra ver o placar, mas não votar.",true)}
   else if(c==="resource_exhausted")toast("Calma, torcida! Muitos votos seguidos. Espera um segundinho e vota de novo.");
@@ -719,9 +752,16 @@ function claudeUrna(store){return{
   next(o,!s.metadata.fromCache)},err)}}
 async function firebaseUrna(cfg){const base="https://www.gstatic.com/firebasejs/10.12.2/";
  const {initializeApp}=await import(base+"firebase-app.js");
- const {getDatabase,ref,onValue,set,increment}=await import(base+"firebase-database.js");
- const rtdb=getDatabase(initializeApp(cfg));
- return{vote:(w,p,c)=>set(ref(rtdb,`votes/${w}/${p}/${c}`),increment(1)),
+ const {getDatabase,ref,onValue,set,update,increment,serverTimestamp}=await import(base+"firebase-database.js");
+ const app=initializeApp(cfg),rtdb=getDatabase(app);
+ let uid=null,modo="novo";
+ try{const {getAuth,signInAnonymously}=await import(base+"firebase-auth.js");const cr=await signInAnonymously(getAuth(app));uid=cr.user.uid}catch(e){modo="antigo"}
+ const simples=(w,p,c)=>set(ref(rtdb,`votes/${w}/${p}/${c}`),increment(1));
+ const seguro=(w,p,c)=>update(ref(rtdb),{[`votes/${w}/${p}/${c}`]:increment(1),[`limits/${uid}`]:serverTimestamp()});
+ return{vote:async(w,p,c)=>{
+   if(modo==="novo"&&uid){try{return await seguro(w,p,c)}catch(e){if(String(e&&e.code||e).includes("PERMISSION")){
+     try{const r=await simples(w,p,c);modo="antigo";return r}catch(e2){const x=new Error("rate");x.code="resource_exhausted";throw x}}throw e}}
+   return simples(w,p,c)},
   listen:(w,next,err)=>onValue(ref(rtdb,`votes/${w}`),s=>next(s.val()||{},true),err)}}
 let weekUnsub=null;
 document.addEventListener("click",e=>{const v=e.target.closest(".vote");if(v)vote(v.dataset.poll,v.dataset.id,v);const a=e.target.closest(".aba");if(a)trocaSemana(a.dataset.week)});
@@ -771,6 +811,58 @@ renderCast();renderAll();setInterval(()=>{tick();if(!openWeek())renderWeek()},30
  document.getElementById("galPrev").onclick=()=>pula(-1);document.getElementById("galNext").onclick=()=>pula(1);
  palco.addEventListener("click",e=>{const f=e.target.closest(".gal-item");if(f)pula(+f.dataset.i-Math.round(pos))});
  requestAnimationFrame(quadro);})();
+
+/* ===== Compartilhar meu voto (card de story 1080x1920) ===== */
+const POLL_FRASE={coroa:"pra levar a Coroa de Cola Quente",prova:"pra ganhar a prova",flop:"pra ir pro Flop",elim:"pra sair da Corrida",look:"pro melhor look da semana"};
+function imgDoVoto(poll,id){const w=shownWeek()||{},p0=id.split("-")[0];
+ if(poll==="prova")return(w.provas||{})[p0]||(PHOTOS[p0]||{}).retrato;
+ if(poll==="elim")return(w.flops||{})[id]||(PHOTOS[id]||{}).retrato;
+ if(poll==="look")return(w.looks||{})[id]||(PHOTOS[id]||{}).retrato;
+ return(PHOTOS[id]||{}).retrato}
+let shareT,shareAtual=null;
+function ofereceShare(poll,id){shareAtual={poll,id};let el=document.getElementById("shareBar");
+ if(!el){el=document.createElement("div");el.id="shareBar";el.className="share-bar";document.body.appendChild(el);
+  el.addEventListener("click",e=>{if(e.target.closest(".sb-x")){el.classList.remove("on");return}if(e.target.closest(".sb-go"))abreShare()})}
+ el.innerHTML=`<span>Votou em <b>${esc(nome(id))}</b>!</span><button type="button" class="sb-go">Compartilhar meu voto</button><button type="button" class="sb-x" aria-label="Fechar">×</button>`;
+ el.classList.add("on");clearTimeout(shareT);shareT=setTimeout(()=>el.classList.remove("on"),9000)}
+const carrega=src=>new Promise((ok,no)=>{const i=new Image();i.crossOrigin="anonymous";i.onload=()=>ok(i);i.onerror=no;i.src=src});
+async function geraCard(poll,id){const W=1080,H=1920,c=document.createElement("canvas");c.width=W;c.height=H;const x=c.getContext("2d");
+ try{await Promise.all(['700 80px Cinzel','600 60px "Cormorant Garamond"','italic 600 60px "Cormorant Garamond"'].map(f=>document.fonts.load(f)))}catch(e){}
+ const [dam,logo,foto,cor]=await Promise.all(["assets/damasco.webp","assets/logo.webp",imgDoVoto(poll,id),poll==="coroa"?"assets/coroa.webp?v=2":null].map(s=>s?carrega(s).catch(()=>null):null));
+ x.fillStyle="#2a141d";x.fillRect(0,0,W,H);
+ if(dam){x.globalAlpha=.22;const pt=x.createPattern(dam,"repeat");x.fillStyle=pt;x.fillRect(0,0,W,H);x.globalAlpha=1}
+ const g=x.createRadialGradient(W/2,H*.45,100,W/2,H*.45,1100);g.addColorStop(0,"rgba(168,56,95,.35)");g.addColorStop(1,"rgba(10,3,6,.85)");x.fillStyle=g;x.fillRect(0,0,W,H);
+ if(logo){const lw=380,lh=lw*logo.height/logo.width;x.drawImage(logo,(W-lw)/2,70,lw,lh)}
+ let fy=560;
+ if(foto){const mh=poll==="coroa"?700:800;let fw=680,fh=fw*foto.height/foto.width;if(fh>mh){fh=mh;fw=fh*foto.width/foto.height}
+  const fx=(W-fw)/2;fy=poll==="coroa"?620:500;
+  x.save();x.shadowColor="rgba(0,0,0,.6)";x.shadowBlur=50;x.shadowOffsetY=20;x.drawImage(foto,fx,fy,fw,fh);x.restore();
+  if(cor&&poll==="coroa"){const cw=fw*.42,ch=cw*cor.height/cor.width;x.drawImage(cor,W/2-cw/2,fy+fh*.08-ch*.85,cw,ch)}
+  fy+=fh}
+ const ouro=x.createLinearGradient(0,0,0,80);ouro.addColorStop(0,"#fff3c4");ouro.addColorStop(.5,"#f6c75a");ouro.addColorStop(1,"#d99a2f");
+ const t=(txt,y,font,fill)=>{x.font=font;x.fillStyle=fill;x.textAlign="center";x.textBaseline="alphabetic";x.fillText(txt,W/2,y)};
+ let y=fy+100;
+ t("EU VOTEI EM",y,'700 46px Cinzel',"#f2c3d3");
+ let n=nome(id).toUpperCase(),sz=96;x.font=`700 ${sz}px Cinzel`;while(x.measureText(n).width>W-120&&sz>48){sz-=4;x.font=`700 ${sz}px Cinzel`}
+ x.save();x.translate(0,y+sz+20-80);t(n,80,`700 ${sz}px Cinzel`,ouro);x.restore();
+ const w=shownWeek()||{};y+=sz+90;
+ t(POLL_FRASE[poll]+(poll==="prova"&&w.title?` ${w.title}`:""),y,'italic 600 50px "Cormorant Garamond"',"#f4e2e8");
+ x.strokeStyle="#c9952e";x.lineWidth=3;x.beginPath();x.moveTo(W/2-220,y+50);x.lineTo(W/2+220,y+50);x.stroke();
+ x.fillStyle="#d6408b";x.beginPath();x.arc(W/2,y+50,11,0,7);x.fill();x.stroke();
+ t("vote você também",H-170,'700 40px Cinzel',"#f6d27a");
+ t("danielcotrim1-cyber.github.io/corrida-da-corrida",H-110,'600 36px "Cormorant Garamond"',"#e6c6d2");
+ return c}
+async function abreShare(){if(!shareAtual)return;const {poll,id}=shareAtual;let m=document.getElementById("shareModal");
+ if(!m){m=document.createElement("div");m.id="shareModal";m.className="share-modal";m.hidden=true;document.body.appendChild(m);
+  m.addEventListener("click",e=>{if(e.target===m||e.target.closest(".sm-x")){m.hidden=true;document.body.style.overflow=""}})}
+ m.innerHTML=`<div class="sm-box"><button type="button" class="sm-x" aria-label="Fechar">×</button><p class="sm-load">Preparando seu card…</p></div>`;m.hidden=false;document.body.style.overflow="hidden";
+ try{const c=await geraCard(poll,id),blob=await new Promise(r=>c.toBlob(r,"image/png")),url=URL.createObjectURL(blob),
+  file=new File([blob],`meu-voto-${id}.png`,{type:"image/png"}),pode=navigator.canShare&&navigator.canShare({files:[file]});
+  m.querySelector(".sm-box").innerHTML=`<button type="button" class="sm-x" aria-label="Fechar">×</button><img src="${url}" alt="Card do seu voto em ${esc(nome(id))}"><div class="sm-acoes">${pode?`<button type="button" class="sm-share">Compartilhar</button>`:""}<a class="sm-down" href="${url}" download="meu-voto-${id}.png">Baixar imagem</a></div><small>Poste nos stories e marque a torcida!</small>`;
+  const b=m.querySelector(".sm-share");if(b)b.onclick=()=>navigator.share({files:[file],text:`Eu votei em ${nome(id)} ${POLL_FRASE[poll]}! Vote você também:`,url:"https://danielcotrim1-cyber.github.io/corrida-da-corrida/"}).catch(()=>{})}
+ catch(e){m.querySelector(".sm-box").innerHTML=`<button type="button" class="sm-x" aria-label="Fechar">×</button><p class="sm-load">Não deu pra gerar o card agora. Tenta de novo.</p>`}}
+
+window.ofereceShare=ofereceShare;window.abreShare=abreShare;
 }
 
 {const m=document.getElementById("carta"),b=document.getElementById("abrirCarta");let last=null;
