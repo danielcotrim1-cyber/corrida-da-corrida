@@ -352,6 +352,30 @@ section.cast.band{padding-top:0}
 .gal-dica{font:italic 400 15px var(--serif);color:#a88c97}
 @media(max-width:700px){.gal-item{width:min(58vw,250px)}.gal-dica{display:none}.gal-sticky{grid-template-rows:minmax(0,62vh) auto auto;align-content:center}}
 @media(prefers-reduced-motion:reduce){.gal-item{transition:none}}
+/* relógio rococó pendurado */
+.week .head{flex-direction:column;align-items:center;text-align:center;justify-content:center}
+.week .head>.clock{order:-1;background:none!important;border:0!important;box-shadow:none!important;padding:0!important;display:grid;justify-items:center;gap:0;width:100%}
+.rel-img{position:relative;width:clamp(210px,24vw,300px);animation:relBalanca 6s ease-in-out infinite;transform-origin:50% 0}
+.rel-img img{display:block;width:100%;height:auto;filter:drop-shadow(0 16px 22px rgba(0,0,0,.5)) drop-shadow(0 0 30px rgba(250,211,118,.18))}
+.ponteiros{position:absolute;left:49.4%;top:62.3%;width:0;height:0}
+.ponteiros i{position:absolute;left:0;bottom:0;transform-origin:50% 100%;border-radius:3px}
+.ponteiros .hh{width:5px;margin-left:-2.5px;height:clamp(30px,3.6vw,46px);background:linear-gradient(#2b1c24,#4a2a36);transform-origin:50% 100%}
+.ponteiros .hm{width:3.5px;margin-left:-1.75px;height:clamp(46px,5.2vw,66px);background:linear-gradient(#2b1c24,#4a2a36)}
+.ponteiros .hs{width:1.5px;margin-left:-.75px;height:clamp(50px,5.6vw,70px);background:#b03a6a;transition:transform .25s cubic-bezier(.4,2.2,.6,1)}
+.ponteiros b{position:absolute;width:11px;height:11px;left:-5.5px;top:-5.5px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff3c4,#c9952e 60%,#7a4509)}
+.ponteiros i{position:absolute;bottom:0}
+.rel-baixo{display:grid;justify-items:center;gap:6px;margin-top:6px}
+.rel-placa{display:flex;align-items:stretch;gap:0;padding:10px 18px;border-radius:14px;background:linear-gradient(180deg,#f9e3ea,#efcbd8);box-shadow:0 0 0 2px #e2b04f,0 0 0 4px #7a4509,0 0 0 5.5px #f6d27a,0 10px 18px rgba(0,0,0,.35)}
+.rel-placa div{display:grid;justify-items:center;padding:0 14px;min-width:58px}
+.rel-placa div+div{border-left:1.5px solid #c9952e}
+.rel-placa b{font:700 clamp(26px,3vw,34px)/1 var(--titulo);color:#2b1c24;-webkit-text-fill-color:#2b1c24;font-variant-numeric:tabular-nums}
+.rel-placa span{font:700 11px/1.6 var(--titulo);letter-spacing:.14em;text-transform:uppercase;color:#7a1f3d;-webkit-text-fill-color:#7a1f3d}
+.rel-placa.fechada b{font-size:18px;letter-spacing:.08em;text-transform:uppercase}
+.rel-placa.fechada span{text-transform:none;letter-spacing:0;font:italic 400 15px var(--serif)}
+.rel-leg{font:italic 400 18px var(--serif);color:#f6d27a;-webkit-text-fill-color:#f6d27a}
+@keyframes relBalanca{0%,100%{transform:rotate(-1.2deg)}50%{transform:rotate(1.2deg)}}
+@media(prefers-reduced-motion:reduce){.rel-img{animation:none}}
+@media(max-width:600px){.rel-placa{padding:8px 8px}.rel-placa div{padding:0 9px;min-width:48px}}
 </style>
 
 </head>
@@ -611,10 +635,17 @@ function renderWeek(){const w=shownWeek(),open=!!openWeek()&&openWeek().id===w.i
  $("#real").innerHTML=`<h3>E no programa?</h3><dl>${item("Venceu a prova",r.prova)}${item("Foi eliminada",r.elim)}${r.flop?item("Foi pro Flop",r.flop):""}</dl>`;
  tick();}
 function tick(){const w=openWeek();
- if(selWeek){$("#clock").innerHTML=`<b>Votação encerrada</b><small>esse é o resultado final da torcida</small>`;return}
- if(w){const ms=+new Date(w.closes)-now(),d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.floor(ms%36e5/6e4);
-  $("#clock").innerHTML=`<b>Votação aberta</b><span class="t">${d}d<em>❦</em>${h}h<em>❦</em>${m}min</span><small>fecha terça, às 20h</small>`}
- else $("#clock").innerHTML=`<b>Votação encerrada</b><small>a próxima abre depois do episódio de terça</small>`;}
+ const fim=selWeek?null:(w?+new Date(w.closes):null),ms=fim?Math.max(0,fim-now()):0;
+ const d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.floor(ms%36e5/6e4),sg=Math.floor(ms%6e4/1e3);
+ const cel=(n,l)=>`<div><b>${n}</b><span>${l}</span></div>`;
+ const placa=fim?`<div class="rel-placa">${cel(d,"dias")}${cel(h,"horas")}${cel(m,"min")}${cel(sg,"seg")}</div><em class="rel-leg">para o fim da votação · fecha terça, às 20h</em>`
+  :`<div class="rel-placa fechada"><div><b>Votação encerrada</b><span>${selWeek?"resultado final da torcida":"a próxima abre depois do episódio de terça"}</span></div></div>`;
+ const el=$("#clock");
+ if(!el.querySelector(".rel-img"))el.innerHTML=`<div class="rel-img"><img src="assets/relogio.webp" alt="Relógio rococó"><div class="ponteiros"><i class="hh"></i><i class="hm"></i><i class="hs"></i><b></b></div></div><div class="rel-baixo"></div>`;
+ el.querySelector(".rel-baixo").innerHTML=placa;
+ const t=new Date(),hr=t.getHours()%12,mi=t.getMinutes(),se=t.getSeconds();
+ el.querySelector(".hh").style.transform=`rotate(${hr*30+mi/2}deg)`;el.querySelector(".hm").style.transform=`rotate(${mi*6+se/10}deg)`;el.querySelector(".hs").style.transform=`rotate(${se*6}deg)`;}
+setInterval(()=>tick(),1000);
 function renderCast(){$("#castGrid").innerHTML=CAST.map(c=>`<article class="cc${c.st==="in"?"":" fora"}${PEDRA[c.id]&&c.st!=="in"?" pedra":""}">${PEDRA[c.id]&&c.st!=="in"?`<img class="estatua" src="${PEDRA[c.id]}" alt="${esc(c.name)} petrificada">`:ava(c.id)}<b>${esc(c.name)}</b><a class="ig" href="https://instagram.com/${esc(c.ig)}" rel="noopener">@${esc(c.ig)}</a><span class="tag${c.st==="in"?"":" out"}">${c.st==="in"?"Na disputa":esc(c.note||"Fora")}</span></article>`).join("")}
 function renderAll(){renderCoroa();renderWeek()}
 let toastT;function toast(t){const el=$("#toast");el.textContent=t;el.style.display="block";clearTimeout(toastT);toastT=setTimeout(()=>el.style.display="none",3500)}
