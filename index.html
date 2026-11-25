@@ -404,6 +404,11 @@ section.cast.band{padding-top:0}
 .ep-video img{display:block;width:100%;height:auto;filter:drop-shadow(0 12px 20px rgba(43,12,24,.4));transition:transform .25s,filter .25s}
 .ep-video:hover img{transform:scale(1.015);filter:drop-shadow(0 16px 26px rgba(43,12,24,.5)) drop-shadow(0 0 18px rgba(250,211,118,.45))}
 .ep-video span{font:italic 400 17px var(--serif);color:#7a1f3d;-webkit-text-fill-color:#7a1f3d}
+/* cards de votação centralizados */
+.panel>ol.looks,.outros .looks.mini{display:flex!important;flex-wrap:wrap;justify-content:center;gap:18px}
+.panel>ol.looks>li,.outros .looks.mini>li{flex:0 1 210px;min-width:0}
+#p-look>ol.looks{max-width:calc(4*210px + 3*18px);margin-left:auto;margin-right:auto}
+@media(max-width:600px){.panel>ol.looks,.outros .looks.mini{gap:10px}.panel>ol.looks>li,.outros .looks.mini>li{flex:0 1 calc(50% - 5px)}#p-look>ol.looks{max-width:none}}
 </style>
 
 </head>
