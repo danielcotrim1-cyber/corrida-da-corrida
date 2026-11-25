@@ -467,6 +467,33 @@ section.cast.band{padding-top:0}
 .lk,.row,.txt{color:#2b1c24}.lk .nm,.row .nm,.lk .ln,.lk .ln b,.row .num,.txt{color:#2b1c24;-webkit-text-fill-color:#2b1c24}
 .vote{-webkit-text-fill-color:currentColor!important}
 .lk .meta,.row .num small{color:#6b4a55!important;-webkit-text-fill-color:#6b4a55!important}
+/* 4. moldura uniforme nas fotos dos cards */
+.lk:not(.fone) .ph{position:relative;border-radius:10px!important;padding:5px;background:linear-gradient(135deg,#6e3f0e,#e8c272 18%,#fff0c0 28%,#b9791f 45%,#f3d382 60%,#8a5414 78%,#f0cd7c)!important;box-shadow:0 4px 10px rgba(43,12,24,.25)!important}
+.lk:not(.fone) .ph img{border-radius:6px;display:block;width:100%;height:100%;object-fit:cover;box-shadow:inset 0 0 0 1px rgba(0,0,0,.3)}
+.lk:not(.fone) .ph::after{content:"";position:absolute;inset:5px;border-radius:6px;box-shadow:inset 0 0 0 1px rgba(255,240,192,.5),inset 0 0 18px rgba(0,0,0,.25);pointer-events:none}
+.looks.mini .lk .ph{padding:4px}
+/* 5. cabeçalho das votações com numeral romano */
+.panel>.pn{display:flex;align-items:center;gap:12px;margin-bottom:4px;font:inherit!important}
+.pn .rom{font:700 clamp(30px,3.4vw,42px)/1 var(--titulo);background:linear-gradient(180deg,#fff3c4,#f0c35a 50%,#b8741c);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:drop-shadow(0 2px 3px rgba(0,0,0,.5))}
+.pn .pn-orn{width:46px;height:12px;background:radial-gradient(circle,#d6408b 0 3.5px,transparent 4.5px) center/12px 12px no-repeat,linear-gradient(#c9952e,#c9952e) center/100% 1.5px no-repeat}
+.pn .pn-de{font:600 13px var(--titulo)!important;letter-spacing:.16em;text-transform:uppercase;color:#e48aaf!important;-webkit-text-fill-color:#e48aaf!important}
+.panel h3{font-size:clamp(22px,2.4vw,30px)!important;margin-top:2px}
+/* 6. movimento só na coroa e no relógio */
+.placa-r,.carta-btn{animation:none!important}
+.anima-in{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
+.anima-in.vis{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.anima-in{opacity:1;transform:none;transition:none}}
+/* 7. nomes inteiros no celular + rodapé */
+.lk .nm,.row .nm{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.2}
+@media(max-width:600px){.lk .nm{font-size:15px!important;min-height:2.4em}.row .nm{font-size:16px!important}}
+footer.rodape{text-align:center;padding:clamp(40px,6vw,70px) max(5vw,16px) 40px;border-top:0;border-image:none;background:linear-gradient(rgba(26,10,16,.9),rgba(14,5,9,.96)),url(assets/damasco.webp) 0 0/220px,#1a0a10!important;box-shadow:inset 0 3px 0 0 #c9952e,inset 0 5px 0 0 #5a3410}
+.rodape .wrap{display:grid;justify-items:center}
+.rod-logo{width:clamp(150px,18vw,210px);height:auto;filter:drop-shadow(0 6px 12px rgba(0,0,0,.5))}
+.rod-nav{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 26px;margin:0 0 20px}
+.rod-nav a{font:600 14px var(--titulo);letter-spacing:.14em;text-transform:uppercase;color:#f6d27a;-webkit-text-fill-color:#f6d27a;text-decoration:none;border-bottom:1px solid rgba(246,210,122,.35);padding-bottom:3px}
+.rod-nav a:hover{border-color:#f6d27a}
+.rodape p{max-width:62ch;margin:0 auto 10px;font:italic 400 16px/1.55 var(--serif);color:#c9b0bb;-webkit-text-fill-color:#c9b0bb}
+.rodape p b{font:700 14px var(--titulo);letter-spacing:.1em;text-transform:uppercase;color:#f6d27a;-webkit-text-fill-color:#f6d27a;font-style:normal}
 </style>
 
 </head>
@@ -576,11 +603,13 @@ section.cast.band{padding-top:0}
 </section>
 </main>
 
-<footer class="band">
+<footer class="band rodape">
   <div class="wrap">
+    <img class="rod-logo" src="assets/logo.webp" alt="Corrida da Corrida das Blogueiras" loading="lazy">
+    <div class="orn" aria-hidden="true" style="margin:6px auto 18px;max-width:300px"><i></i></div>
+    <nav class="rod-nav" aria-label="Atalhos"><a href="#coroa">Winner</a><a href="#semana">Votações da semana</a><a href="#elenco">Elenco</a></nav>
     <p><b>Site de fã.</b> Feito por fã, sem ligação com a DiaTV, o Diva Depressão ou a produção da Corrida das Blogueiras. Os votos daqui são só da torcida e não valem no programa. Assista aos episódios no YouTube da DiaTV.</p>
-    <p><b>Corrida da Corrida das Blogueiras</b> é um projeto de fã. Nomes, marcas e imagens do programa pertencem aos seus donos.</p>
-    <p>Votação livre e sem login: serve pra medir a torcida, não é pesquisa nem resultado oficial.</p>
+    <p>Votação livre e sem login: serve pra medir a torcida, não é pesquisa nem resultado oficial. Nomes, marcas e imagens do programa pertencem aos seus donos.</p>
   </div>
 </footer>
 <div class="toast" id="toast" role="status"></div>
@@ -728,7 +757,7 @@ function renderWeek(){const w=shownWeek(),open=!!openWeek()&&openWeek().id===w.i
    :apres(w)+`<ol class="looks">${voteCards(w,"look",ids,w.looks||{},open,{alt:"Look",icon:HANGER,ph:"Foto do look"})}</ol>${outrosLooks(w)}`;
   const nx=POLLS[i+1],cta=nx?`<a class="cta cta-in" href="#p-${nx.k}"><small>Próxima votação · ${i+2} de ${POLLS.length}</small><b>${nx.k==="prova"&&w.duplas?"Qual dupla merecia ganhar a prova?":nx.q}</b><span>Continue julgando ↓</span></a>`
    :`<a class="cta cta-in" href="#coroa"><small>Você julgou a semana toda!</small><b>Volte e vote na winner</b><span>Quem leva a Coroa de Cola Quente? ↑</span></a>`;
-  return `<article class="panel" id="p-${p.k}" aria-labelledby="q-${p.k}"><div class="pn">${i+1} de ${POLLS.length}</div><h3 id="q-${p.k}">${p.k==="prova"&&w.duplas?"Qual dupla merecia ganhar a prova?":p.q}</h3><p class="meta">${meta}</p>${body}${open?cta:""}</article>`}).join("");
+  return `<article class="panel" id="p-${p.k}" aria-labelledby="q-${p.k}"><div class="pn"><span class="rom">${["I","II","III","IV","V","VI"][i]}</span><i class="pn-orn" aria-hidden="true"></i><span class="pn-de">votação ${i+1} de ${POLLS.length}</span></div><h3 id="q-${p.k}">${p.k==="prova"&&w.duplas?"Qual dupla merecia ganhar a prova?":p.q}</h3><p class="meta">${meta}</p>${body}${open?cta:""}</article>`}).join("");
  renderAbas(w);
  const r=w.real||{},prox=new Date(w.closes).toLocaleDateString("pt-BR",{day:"numeric",month:"long",timeZone:"America/Sao_Paulo"}),
   item=(lbl,id,pend)=>`<div><dt>${lbl}</dt><dd>${id?esc(nome(id)):(pend||"a confirmar")}</dd></div>`;
@@ -900,6 +929,11 @@ window.ofereceShare=ofereceShare;window.abreShare=abreShare;
  b.addEventListener("click",abrir);document.getElementById("fecharCarta").addEventListener("click",fechar);document.getElementById("okCarta").addEventListener("click",fechar);
  m.addEventListener("click",e=>{if(e.target===m)fechar()});document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!m.hidden)fechar()});}
 document.addEventListener("click",e=>{const b=e.target.closest(".iphone .som");if(!b)return;const v=b.parentElement.querySelector("video");v.muted=!v.muted;if(!v.muted)v.play();b.textContent=v.muted?"🔇":"🔊";b.setAttribute("aria-label",v.muted?"Ativar som":"Desativar som")});
+
+/* entrada suave (uma vez) dos blocos */
+(function(){if(!("IntersectionObserver" in window))return;const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("vis");io.unobserve(e.target)}}),{rootMargin:"0px 0px -8% 0px"});
+ const marca=()=>document.querySelectorAll(".panel,.real,.cta,.apres,.ep-video,.gal-sticky").forEach(el=>{if(!el.classList.contains("anima-in")){el.classList.add("anima-in");io.observe(el)}});
+ marca();new MutationObserver(marca).observe(document.getElementById("polls"),{childList:true});})();
 </script>
 </body>
 </html>
