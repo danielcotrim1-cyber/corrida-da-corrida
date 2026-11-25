@@ -494,6 +494,10 @@ footer.rodape{text-align:center;padding:clamp(40px,6vw,70px) max(5vw,16px) 40px;
 .rod-nav a:hover{border-color:#f6d27a}
 .rodape p{max-width:62ch;margin:0 auto 10px;font:italic 400 16px/1.55 var(--serif);color:#c9b0bb;-webkit-text-fill-color:#c9b0bb}
 .rodape p b{font:700 14px var(--titulo);letter-spacing:.1em;text-transform:uppercase;color:#f6d27a;-webkit-text-fill-color:#f6d27a;font-style:normal}
+.aviso-voto{display:flex;align-items:center;justify-content:center;gap:10px;text-align:center;margin:10px 0 16px;padding:10px 16px;border-radius:999px;border:1.5px solid transparent;background:linear-gradient(180deg,#fbf3e2,#efdcbc) padding-box,var(--ouro-metal) border-box;font:600 16px/1.3 var(--serif);color:#5a1530;-webkit-text-fill-color:#5a1530;box-shadow:0 6px 14px rgba(10,3,6,.35)}
+.aviso-voto .av-ic{color:#c9952e;-webkit-text-fill-color:#c9952e;font-size:13px}
+#semana .aviso-voto{max-width:640px;margin:0 auto clamp(40px,5vw,60px);font-size:17px}
+@media(max-width:600px){.aviso-voto{border-radius:16px;font-size:15px;padding:10px 12px}}
 </style>
 
 </head>
@@ -563,6 +567,7 @@ footer.rodape{text-align:center;padding:clamp(40px,6vw,70px) max(5vw,16px) 40px;
     </div>
     <div class="board">
       <h3>Ranking da torcida</h3>
+      <p class="aviso-voto"><span class="av-ic" aria-hidden="true">✦</span>Vote quantas vezes quiser e compartilhe seus votos nas redes sociais!<span class="av-ic" aria-hidden="true">✦</span></p>
       <p class="meta" id="coroaMeta">Carregando votos…</p>
       <ol class="rank" id="coroaList"></ol>
       <p class="note" id="coroaNote" hidden></p>
@@ -581,6 +586,7 @@ footer.rodape{text-align:center;padding:clamp(40px,6vw,70px) max(5vw,16px) 40px;
     </div>
     <aside class="real" id="real"></aside>
     <p class="note" id="weekNote" hidden></p>
+    <p class="aviso-voto"><span class="av-ic" aria-hidden="true">✦</span>Vote quantas vezes quiser e compartilhe seus votos nas redes sociais!<span class="av-ic" aria-hidden="true">✦</span></p>
     <div class="polls" id="polls"></div>
   </div>
 </section>
