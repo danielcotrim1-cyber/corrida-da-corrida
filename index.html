@@ -356,8 +356,8 @@ section.cast.band{padding-top:0}
 .week .head{flex-direction:column;align-items:center;text-align:center;justify-content:center}
 .week .head>.clock{order:-1;background:none!important;border:0!important;box-shadow:none!important;padding:0!important;display:grid;justify-items:center;gap:0;width:100%}
 .rel-img{position:relative;width:clamp(210px,24vw,300px);animation:relBalanca 6s ease-in-out infinite;transform-origin:50% 0}
-.rel-img img{display:block;width:100%;height:auto;filter:drop-shadow(0 16px 22px rgba(0,0,0,.5)) drop-shadow(0 0 30px rgba(250,211,118,.18))}
-.ponteiros{position:absolute;left:49.4%;top:62.3%;width:0;height:0}
+.rel-img img{display:block;width:100%;height:auto;filter:drop-shadow(0 14px 18px rgba(0,0,0,.45))}
+.ponteiros{position:absolute;left:49.5%;top:62.3%;width:0;height:0}
 .ponteiros i{position:absolute;left:0;bottom:0;transform-origin:50% 100%;border-radius:3px}
 .ponteiros .hh{width:5px;margin-left:-2.5px;height:clamp(30px,3.6vw,46px);background:linear-gradient(#2b1c24,#4a2a36);transform-origin:50% 100%}
 .ponteiros .hm{width:3.5px;margin-left:-1.75px;height:clamp(46px,5.2vw,66px);background:linear-gradient(#2b1c24,#4a2a36)}
@@ -641,7 +641,7 @@ function tick(){const w=openWeek();
  const placa=fim?`<div class="rel-placa">${cel(d,"dias")}${cel(h,"horas")}${cel(m,"min")}${cel(sg,"seg")}</div><em class="rel-leg">para o fim da votação · fecha terça, às 20h</em>`
   :`<div class="rel-placa fechada"><div><b>Votação encerrada</b><span>${selWeek?"resultado final da torcida":"a próxima abre depois do episódio de terça"}</span></div></div>`;
  const el=$("#clock");
- if(!el.querySelector(".rel-img"))el.innerHTML=`<div class="rel-img"><img src="assets/relogio.webp" alt="Relógio rococó"><div class="ponteiros"><i class="hh"></i><i class="hm"></i><i class="hs"></i><b></b></div></div><div class="rel-baixo"></div>`;
+ if(!el.querySelector(".rel-img"))el.innerHTML=`<div class="rel-img"><img src="assets/relogio.webp?v=3" alt="Relógio rococó"><div class="ponteiros"><i class="hh"></i><i class="hm"></i><i class="hs"></i><b></b></div></div><div class="rel-baixo"></div>`;
  el.querySelector(".rel-baixo").innerHTML=placa;
  const t=new Date(),hr=t.getHours()%12,mi=t.getMinutes(),se=t.getSeconds();
  el.querySelector(".hh").style.transform=`rotate(${hr*30+mi/2}deg)`;el.querySelector(".hm").style.transform=`rotate(${mi*6+se/10}deg)`;el.querySelector(".hs").style.transform=`rotate(${se*6}deg)`;}
